@@ -32,7 +32,7 @@ Optional arguments:
  --adapters               Additional adapters to include during trimming with fastp
  --primers                Bed file containing primer scheme for trimming with iVar
  --ivar_flags             Additional options to pass to iVar during primer/ quality trimming
- --freebayes              Include this switch to use freebayes to call variants [freyja]
+ --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --version                Current WasteFlow version number
  --help                   This usage statement
         """
@@ -304,7 +304,7 @@ process var_call_freebayes {
   tuple val(sample_id), path(trim_sort_bam), path(trim_sort_bai), path(ref)
 
   output:
-  tuple val(sample_id), file("*.vcf")
+  tuple val(sample_id), file("*_split.vcf")
 
   when:
   params.freebayes == true
@@ -315,21 +315,23 @@ process var_call_freebayes {
   ${trim_sort_bam} \
   --vcf ${sample_id}.vcf 
   
-#  bgzip -f ${sample_id}.vcf
- # tabix -f -p vcf ${sample_id}.vcf.gz
-  #bcftools norm -m- ${sample_id}.vcf.gz > \
- # ${sample_id}_split.vcf 
+  #split multiallelic sites for freyja lineage
+  bgzip -f ${sample_id}.vcf
+  tabix -f -p vcf ${sample_id}.vcf.gz
+  bcftools norm -m- ${sample_id}.vcf.gz > \
+  ${sample_id}_split.vcf 
+  
+  #hard-coded - needs to be adusted to take from ref fa header
+  if [[ \$(grep -c "MN908947.3" ${sample_id}_split.vcf) -eq 1 ]];
+  then
+  echo "" > ${sample_id}_split.vcf
+  fi
 
-  #if [[ \$(grep -c "MN908947.3" ${sample_id}_split.vcf) -eq 1 ]];
-  #then
-  #echo "" > ${sample_id}_split.vcf
-  #fi
 
-
-  sed -i "s/0.5,0.5/0.5/g" ${sample_id}.vcf
-  sed -i "s/0,0/0/g" ${sample_id}.vcf
-  sed -i "s/0.5,0/0.5/g" ${sample_id}.vcf
-  sed -i "s/0,0.5/0.5/g" ${sample_id}.vcf
+ # sed -i "s/0.5,0.5/0.5/g" ${sample_id}.vcf
+ # sed -i "s/0,0/0/g" ${sample_id}.vcf
+ # sed -i "s/0.5,0/0.5/g" ${sample_id}.vcf
+ # sed -i "s/0,0.5/0.5/g" ${sample_id}.vcf
 
   #temp sol'n as freyja lineage call gets tripped by AF present in 50:50
   
