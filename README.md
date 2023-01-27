@@ -21,7 +21,7 @@ is sequenced. This pipeline, WasteFlow, written by JMC in Nextflow aims to provi
 ## Quick-Start Guide
 
 ```
-nextflow run main.nf --data_dir /path/to/pe/fastq/files/ --ref /home/jess.cal/cov2_wstwtr/cov2_ref.fasta --conda_cache /home/jess.cal/caches/ -profile conda --fastp --ivar --summarize
+nextflow run main.nf --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed --conda_cache /home/jess.cal/caches/ -profile conda --summarize
 ```
 
 ## Dependencies
