@@ -119,8 +119,6 @@ process clean_trim_galore {
 
   when:
   params.trim_galore == true
-  //out_dir = file("${params.data_dir}output")
-  //out_dir.mkdir() //multiqc needs it sooner than nextflow generates it in the process
 
   """
   trim_galore --fastqc \
@@ -130,8 +128,7 @@ process clean_trim_galore {
 }
 
 process clean_fastp {
-  //conda '/home/jess.cal/cov2_wstwtr/wasteflow_dev/wasteflow_env.yml'
-  //conda '/home/jess.cal/caches/wasteflow-b432769b3335a7ebbd24d09cc04d0a45'
+  //conda "/path/to/your/yaml"
 
   tag "Processing reads from ${sample_id} with fastp"
   publishDir "${params.data_dir}results/fastp_trimmed_reads/", mode: 'copy'
