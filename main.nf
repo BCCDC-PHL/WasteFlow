@@ -20,7 +20,7 @@ Usage:
 nextflow run main.nf -profile conda [OPTIONS]
 
 Mandatory arguments:
- --data_dir               User's directory that contains input paired-end sequence reads (fastq files).
+ --dir                    User's directory that contains input paired-end sequence reads (fastq files).
                           WasteFlow accepts gzip compressed or uncompressed files.
  --out_dir                User-specified directory to output WasteFlow results to. Default is data_dir/results.                         
  --ref                    Reference genome used to align reads to during guided assembly
