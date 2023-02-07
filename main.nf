@@ -20,8 +20,9 @@ Usage:
 nextflow run main.nf -profile conda [OPTIONS]
 
 Mandatory arguments:
- --dir                    User's directory that contains input paired-end sequence reads (fastq files).
+ --data_dir               User's directory that contains input paired-end sequence reads (fastq files).
                           WasteFlow accepts gzip compressed or uncompressed files.
+ --out_dir                User-specified directory to output WasteFlow results to. Default is data_dir/results.                         
  --ref                    Reference genome used to align reads to during guided assembly
 
 
@@ -76,7 +77,7 @@ log.info """
 \n===================================================================================
 data directory: ${params.data_dir}
 reference genome: ${params.ref}
-results directory: ${params.data_dir}results/
+results directory: ${params.out_dir}
 
 """
 
@@ -109,7 +110,7 @@ fi
 process clean_trim_galore {
 
   tag "Processing reads from ${sample_id} with Trim Galore (Cutadapt)"
-  publishDir "${params.data_dir}results/cutadapt_trimmed_reads/", mode: 'copy'
+  publishDir "${params.out_dir}/cutadapt_trimmed_reads/", mode: 'copy'
 
   input:
   tuple val(sample_id), path(reads)
@@ -131,7 +132,7 @@ process clean_fastp {
   //conda "/path/to/your/yaml"
 
   tag "Processing reads from ${sample_id} with fastp"
-  publishDir "${params.data_dir}results/fastp_trimmed_reads/", mode: 'copy'
+  publishDir "${params.out_dir}/fastp_trimmed_reads/", mode: 'copy'
 
   input:
   tuple val(sample_id), path(reads)
@@ -158,7 +159,7 @@ process clean_fastp {
 process qc_reads {
   
   tag "Generating QC summary for processed reads with MultiQC"
-  publishDir "${params.data_dir}results/QC_reports/reads", mode: 'copy'
+  publishDir "${params.out_dir}/QC_reports/reads", mode: 'copy'
 
   input:
   file("*")
@@ -167,7 +168,7 @@ process qc_reads {
   tuple file("multiqc_report.html"), file("multiqc_data")
 
   """
-  multiqc ${params.data_dir}results/.
+  multiqc ${params.out_dir}/.
 
   """
 }
@@ -176,7 +177,7 @@ process qc_reads {
 process align_minimap2 {
   
   tag "Mapping reads from ${sample_id} to ${params.ref} with Minimap2"
-  publishDir "${params.data_dir}/results/minimap2_alignments", mode: 'copy'
+  publishDir "${params.out_dir}/minimap2_alignments", mode: 'copy'
 
   input:
   tuple val(sample_id), path(trim_for), path(trim_rev), file(ref)
@@ -200,7 +201,7 @@ process align_minimap2 {
 
 process align_bwa {
   tag "Mapping reads from ${sample_id} to ${params.ref} with BWA-MEM"
-  publishDir "${params.data_dir}/results/bwa_alignments", mode: 'copy'
+  publishDir "${params.out_dir}/bwa_alignments", mode: 'copy'
 
   input:
   tuple val(sample_id), path(trim_for), path(trim_rev), file(ref)
@@ -225,7 +226,7 @@ process align_bwa {
 
 process primer_trim {
   tag "Trimming primers from reads in ${sample_id} with iVar"
-  publishDir "${params.data_dir}/results/ivar_primer_removed_alignments", mode: 'copy'
+  publishDir "${params.out_dir}/ivar_primer_removed_alignments", mode: 'copy'
 
   input:
   tuple val(sample_id), path(sort_bam), path(sort_bam_bai)
@@ -248,7 +249,7 @@ process primer_trim {
 process qc_align {
   
   tag "Generating alignment summary metrics for ${sample_id} with SAMtools"
-  publishDir "${params.data_dir}/results/QC_reports/alignments", mode: 'copy'
+  publishDir "${params.out_dir}/QC_reports/alignments", mode: 'copy'
 
   input:
   tuple val(sample_id), path(trim_sort_bam), path(trim_sort_bai)
@@ -270,7 +271,7 @@ process qc_align {
 process read_depths {
   
   tag "Extracting read depth coverage in ${sample_id} with SAMtools"
-  publishDir "${params.data_dir}/results/samtools_depths", mode: 'copy'
+  publishDir "${params.out_dir}/samtools_depths", mode: 'copy'
 
   input:
   tuple val(sample_id), file(trim_sort_bam), path(trim_sort_bai), file(ref)
@@ -295,7 +296,7 @@ process read_depths {
 process var_call_freebayes {
 
   tag "Calling variants for ${sample_id} with freebayes"
-  publishDir "${params.data_dir}/results/freebayes_variant_calls", mode: 'copy'
+  publishDir "${params.out_dir}/freebayes_variant_calls", mode: 'copy'
 
   input:
   tuple val(sample_id), path(trim_sort_bam), path(trim_sort_bai), path(ref)
@@ -341,7 +342,7 @@ process var_call_freebayes {
 process var_call_freyja {
   
   tag "Calling variants and extracting read depth from ${sample_id} with Freyja (iVar)"
-  publishDir "${params.data_dir}/results/freyja_variant_calls_depths", mode: 'copy'
+  publishDir "${params.out_dir}/freyja_variant_calls_depths", mode: 'copy'
 
   input:
   tuple val(sample_id), path(trim_sort_bam),path(trim_sort_bai), path(ref)
@@ -368,7 +369,7 @@ process var_call_freyja {
 process lineage_freyja {
     
   tag "Calculating relative viral lineage abundances from ${sample_id} with Freyja"
-  publishDir "${params.data_dir}/results/freyja_individual_lineage_summaries", mode: 'copy'
+  publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
@@ -388,7 +389,7 @@ process lineage_freyja {
 process summarize_freyja {
   
   tag "Summarizing relative viral lineage abundances across all samples with Freyja"
-  publishDir "${params.data_dir}/results/freyja_overall_lineage_summary", mode: 'copy'
+  publishDir "${params.out_dir}/freyja_overall_lineage_summary", mode: 'copy'
 
   input:
   file("*")
@@ -402,7 +403,7 @@ process summarize_freyja {
 
   """
   freyja aggregate \
-  ${params.data_dir}/results/freyja_individual_lineage_summaries/ \
+  ${params.out_dir}/freyja_individual_lineage_summaries/ \
   --output freyja_lineage_summary.tsv
 
 #  freyja plot \
@@ -416,7 +417,7 @@ process summarize_freyja {
 /*
 process voc_snv {
   tag "Determining frequency of lineage-specific SNVs in samples"
-  publishDir "${params.data_dir}/results/", mode: 'copy'
+  publishDir "${params.out_dir}", mode: 'copy'
   //DIY script to come
   input:
 
