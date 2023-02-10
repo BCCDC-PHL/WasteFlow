@@ -66,7 +66,8 @@ nextflow run j3551ca/WasteFLow -profile conda --data_dir /path/to/input/data
 The pipeline requires the following files:
 
 - Reference genome for guided read alignment [./data_dir/sequences.fasta]
-- Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq]
+- Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq]. 
+Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. 
 
 ## Output
 
