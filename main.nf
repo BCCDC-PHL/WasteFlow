@@ -466,6 +466,7 @@ if (params.bwa) {
       .combine(ref_ch))
   }
 
+//trim_aln_ch = aln_ch
 trim_aln_ch = primer_trim(aln_ch)
 trim_aln_ch | qc_align
 //aln_ch | qc_align
