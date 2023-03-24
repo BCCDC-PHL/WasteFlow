@@ -304,8 +304,8 @@ process var_call_freebayes {
   output:
   tuple val(sample_id), file("*_split.vcf")
 
-  when:
-  params.freebayes == true
+  //when:
+  //params.freebayes == true
 
   """
   freebayes \
@@ -364,6 +364,45 @@ process var_call_freyja {
 
   """
 
+}
+
+process annotate_bcf {
+
+  tag "Annotating vcf file of ${sample_id} with BCFtools"
+  publishDir "${params.out_dir}/bcft_vcf_annotation", mode: 'copy'
+  
+  input:
+  tuple val(sample_id), file(free_vcf), file(ref)
+  
+  output:
+  tuple val(sample_id), file("*.ann.vcf")
+  
+  """
+bcftools csq --fasta-ref ${ref} --gff-annot ${params.gff3} --phase s --output ${sample_id}.ann.vcf --output-type v ${free_vcf} 
+  
+  """
+
+}
+
+//snpEff download -v MN908947.3 --> goes to /home/jess.cal/.conda/envs/snpeff_env/share/snpeff-5.1-2/./data/
+process annotate_snpeff {
+
+  tag "Annotating vcf file of ${sample_id} with SnpEff"
+  publishDir "${params.out_dir}/snpeff_vcf_annotation", mode: 'copy'
+
+  input:
+  tuple val(sample_id), file(free_vcf)
+  
+  output:
+  tuple val(sample_id), file("*.ann.vcf")
+  
+  """
+  snpEff -noLog\
+  -hgvs1LetterAa\
+  MN908947.3\
+  ${free_vcf} >\
+  ${sample_id}.ann.vcf
+  """
 }
 
 process lineage_freyja {
@@ -471,9 +510,17 @@ trim_aln_ch = primer_trim(aln_ch)
 trim_aln_ch | qc_align
 //aln_ch | qc_align
 
-if (params.freebayes){
+//generate mutation table input: 
  trim_aln_ch
-  .combine(ref_ch)| var_call_freebayes
+  .combine(ref_ch)| var_call_freebayes 
+  
+  annotate_snpeff(var_call_freebayes.out)
+ // annotate_bcf(var_call_freebayes.out
+ // .combine(ref_ch))
+  
+if (params.freebayes){
+ //trim_aln_ch
+ //.combine(ref_ch)| var_call_freebayes //redundant (see above)
 
   aln_depth_ch = trim_aln_ch
 
