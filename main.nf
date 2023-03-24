@@ -417,6 +417,8 @@ process lineage_freyja {
   tuple val(sample_id), file("*.tsv")
 
   """
+  freyja update
+  
   freyja demix\
   ${vcf} \
   ${depths} \
