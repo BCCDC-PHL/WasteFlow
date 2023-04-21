@@ -417,12 +417,12 @@ process lineage_freyja {
   tuple val(sample_id), file("*.tsv")
 
   """
-  freyja update
-  
   freyja demix\
   ${vcf} \
   ${depths} \
   --output ${sample_id}_freyja_lineage_summary.tsv
+
+  freyja demix --version > "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log
   """
 
 }
