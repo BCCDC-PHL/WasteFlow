@@ -422,7 +422,7 @@ process lineage_freyja {
   ${depths} \
   --output ${sample_id}_freyja_lineage_summary.tsv
   
-  echo -e "Lineage defining barcodes updated on $( date +%Y-%m-%d )" > \
+  echo -e "Lineage-defining barcodes used on \$( date +%Y-%m-%d ) :" > \
   "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log
   freyja demix --version >> "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log
   """
