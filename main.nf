@@ -107,6 +107,23 @@ fi
 """
 }
 
+process merge_reps {
+
+tag "Merging reads from replicates of same sample"
+
+input:
+tuple val(sample_id), path(reads)
+
+output:
+tuple val(sample_id), path(reads)
+
+"""
+
+
+"""
+
+}
+
 process clean_trim_galore {
 
   tag "Processing reads from ${sample_id} with Trim Galore (Cutadapt)"
@@ -426,6 +443,22 @@ process lineage_freyja {
 //freyja demix --version > "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log"
 }
 
+process update_barcode {
+  
+tag "Update mutational barcode and associated lineage designations"
+
+output:
+stdout
+
+"""
+freyja update 
+
+freyja demix --version  > "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log"
+
+"""
+
+}
+
 process summarize_freyja {
   
   tag "Summarizing relative viral lineage abundances across all samples with Freyja"
@@ -476,7 +509,7 @@ workflow
 
 workflow {
   reads_ch = Channel 
-  .fromFilePairs(params.pe_reads)
+  .fromFilePairs(params.pe_reads).view()
   //.filter { !it[2].empty } //files null from here already
   //.collect() //reads_ch originally when omitting empty samps process
 
@@ -484,7 +517,21 @@ workflow {
   .fromPath(params.ref, checkIfExists:true)
 
   //reads_ch = empty_samps(read_ch)
-  
+
+/**
+if (params.redo){
+  tsv_ch = Channel
+  .fromPath(params.tsv, checkIfExists:true)
+  update_barcode()
+  lineage_freyja(tsv_ch)
+  lineage_ch = lineage_freyja.out
+  if (params.summarize){
+  lineage_ch.collect() | summarize_freyja
+
+}
+ }
+ */ 
+
   if (params.trim_galore) {
     trim_ch=clean_trim_galore(reads_ch)
     trim_ch.collect() | qc_reads
@@ -551,7 +598,6 @@ if (params.summarize){
 //lineage_freyja(trim_aln_ch
 //.combine(ref_ch)
 //.combine(var_call.out))
-
 
 
 
