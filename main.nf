@@ -35,6 +35,8 @@ Optional arguments:
  --ivar_flags             Additional options to pass to iVar during primer/ quality trimming
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
+ --sum_dir                User-defined location to save cumulative mutation table 
+ --table_search_string    User-defined pathway/search string used to collect past mutation tables  
  --summarize              Summarize lineage calls across all samples
  --version                Current WasteFlow version number
  --help                   This usage statement
@@ -80,7 +82,7 @@ log.info """
 data directory: ${params.data_dir}
 reference genome: ${params.ref}
 results directory: ${params.out_dir}
-
+previous mutation table search string: ${params.table_search_string != null ? params.table_search_string : 'working with current data' }
 """
 
 /**

@@ -108,11 +108,50 @@ process summarize_freyja {
 
 }
 
+process vcf2table {
+  tag "Extract and clean mutations from snpeff-annotated VCF files"
+  publishDir "${params.out_dir}/mutation_table", mode: 'copy'
+
+  input:
+    tuple val(sample_id), path(ann_vcf)
+
+  output:
+    path("${sample_id}_mutation_table.csv")
+
+  """
+  SnpSift \
+    extractFields -s "," -e "NA" \
+    $ann_vcf \
+    CHROM POS REF ALT AO DP TYPE "ANN[0].ALLELE" "ANN[0].EFFECT" "ANN[0].GENE" "ANN[0].HGVS_P" > ${sample_id}_table.tsv
+
+  Rscript ${params.bin}/process_table.R \
+    --bin=${params.bin} \
+    --mutations=${sample_id}_table.tsv \
+    --sample=${sample_id} > ${sample_id}_mutation_table.csv
+  """
+
+}
+
+process collectTables {
+  tag "Generate mutation frequency and collapse into regional estimates"
+
+  input:
+    path MUTATION_TABLE_AGGREGATE
+
+  """
+  Rscript ${params.bin}/mutation_watchlist.R \
+    --concat_mutations=$MUTATION_TABLE_AGGREGATE \
+    --outdir="${params.sum_dir}"
+  """
+}
+
+
 workflow EFFLUENT {
 
   take:
   trim_aln_ch
   freeb_vcf_ch
+  ann_vcf_ch
   
   main:
   ref_ch = Channel
@@ -137,6 +176,27 @@ workflow EFFLUENT {
     .out
     .filter { it[2].size()>0 && it[1].size()>0 }
     lineage_freyja(depth_ch)
+  }
+
+  // Extract mutations from VCF and clean entries
+  vcf2table( ann_vcf_ch )
+
+  // Collect and clean all previous mutation table
+  if ( params.table_search_string != null ) {
+      // Run with current and previous data
+      previous_ch = Channel
+                          .fromPath( params.table_search_string,
+                                     checkIfExists: true )
+
+      previous_ch
+                .concat( vcf2table.out )
+                .collectFile( name: "mutation_tables.csv",
+                              keepHeader: true,
+                              sort: { it.simpleName } )
+                .set { mutation_table_ch }
+
+      // Clean and collapse mutations
+      collectTables( mutation_table_ch )
   }
   
   lineage_ch = lineage_freyja.out

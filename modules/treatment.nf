@@ -285,9 +285,11 @@ workflow TREATMENT {
   freeb_vcf_ch = var_call_freebayes.out
   
   annotate_snpeff(freeb_vcf_ch)
-
+  
+  ann_vcf_ch = annotate_snpeff.out
+  
   emit:
   trim_aln_ch
   freeb_vcf_ch
-
+  ann_vcf_ch
 }
