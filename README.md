@@ -56,9 +56,18 @@ git clone https://github.com/j3551ca/WasteFlow.git
 cd WasteFlow
 nextflow run main.nf -profile conda --data_dir /path/to/input/data
 ```
-or run directly using:
+
+## Quick Start
+
 ```
+# Run all modules from the WasteFlow directory:
+nextflow run main.nf -profile conda --data_dir /path/to/input/data
+
+# Run all modules outside of WasteFlow
 nextflow run j3551ca/WasteFLow -profile conda --data_dir /path/to/input/data
+
+# Run all modules + collate all *mutation_tables.csv, construct mutation measurements, and write cumulative file
+nextflow run main.nf -profile conda --data_dir /path/to/input/data --table_search_string "/path/to/dir/holding/*mutation_table.csv" --sum_dir /path/to/write/cumlative_file  
 ```
 
 ## Input

@@ -40,7 +40,6 @@ message( sprintf("--mutations : %s\n--sample : %s",
 message("Loading libraries...")
 ###############################
 suppressPackageStartupMessages( library(readr) )
-suppressPackageStartupMessages( library(dplyr) )
 suppressPackageStartupMessages( library(stringr) )
 suppressPackageStartupMessages( library(data.table) )
 source( sprintf( "%s/vcf2hgvs.R", opt$bin))
