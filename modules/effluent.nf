@@ -80,6 +80,21 @@ process lineage_freyja {
 //freyja demix --version > "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log"
 }
 
+process barcode_version {
+
+  tag "Recording Freyja barcode version used"
+  publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
+
+  output:
+  file("*.log")
+  
+  """
+  echo \$(freyja demix --version) > \$(date +%Y%m%d)_barcode.log
+
+  """
+
+}
+
 process summarize_freyja {
   
   tag "Summarizing relative viral lineage abundances across all samples with Freyja"
@@ -145,6 +160,8 @@ workflow EFFLUENT {
     lineage_ch.collect() | summarize_freyja
   
   }
+  
+  barcode_version()
   
   emit:
   summarize_freyja.out
