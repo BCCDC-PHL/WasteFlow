@@ -109,7 +109,7 @@ process summarize_freyja {
 }
 
 process vcf2table {
-  tag "Extract and clean mutations from snpeff-annotated VCF files"
+  tag "Extract and clean mutations from ${sample_id} annotated VCF file"
   publishDir "${params.out_dir}/mutation_table", mode: 'copy'
 
   input:
@@ -177,6 +177,13 @@ workflow EFFLUENT {
     .filter { it[2].size()>0 && it[1].size()>0 }
     lineage_freyja(depth_ch)
   }
+  
+  lineage_ch = lineage_freyja.out
+  
+  if (params.summarize){
+    lineage_ch.collect() | summarize_freyja
+  
+  }
 
   // Extract mutations from VCF and clean entries
   vcf2table( ann_vcf_ch )
@@ -197,13 +204,6 @@ workflow EFFLUENT {
 
       // Clean and collapse mutations
       collectTables( mutation_table_ch )
-  }
-  
-  lineage_ch = lineage_freyja.out
-  
-  if (params.summarize){
-    lineage_ch.collect() | summarize_freyja
-  
   }
   
   emit:
