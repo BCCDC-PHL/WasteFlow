@@ -27,7 +27,7 @@ Mandatory arguments:
 
 
 Optional arguments:
- --trim-galore            Include this switch to use trim-galore to trim adapters/ low qual bases [default: fastp]
+ --trim_galore            Include this switch to use trim-galore to trim adapters/ low qual bases [default: fastp]
  --bwa                    Include this switch to use bwa-mem to align reads to reference [minimap2]
  --conda_cache            User-defined location to save conda env [/path/to/conda/env/location/]
  --adapters               Additional adapters to include during trimming with fastp
