@@ -36,10 +36,10 @@ Optional arguments:
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
  --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) 
+ --summarize              Summarize lineage calls across all samples
  --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations   
  --sum_dir                User-defined location to save cumulative mutation table 
  --table_search_string    User-defined pathway/search string used to collect past mutation tables  
- --summarize              Summarize lineage calls across all samples
  --version                Current WasteFlow version number
  --help                   This usage statement
         """
