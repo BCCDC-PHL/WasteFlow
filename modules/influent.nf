@@ -48,7 +48,9 @@ tuple val(sample_id), path("*_cmbnd_R1.fq"), path("*_cmbnd_R2.fq")
 
 workflow INFLUENT {
 
- fwd_ch = Channel
+ if(params.combine_reps){
+ 
+   fwd_ch = Channel
   .fromPath(params.pe_reads)
   .filter{ it.name =~ /_R1_/  }
   .map{ tuple( it.baseName.split('-[0-9]{1}-|-COVIDWW-')[0], it ) }
@@ -65,10 +67,18 @@ workflow INFLUENT {
   
   merge_reps(merged_ch)
   
-  cmbnd_ch = merge_reps
+  read_tuple_ch = merge_reps
   .out
   
+  }else{
+  
+  read_tuple_ch = Channel
+  .fromFilePairs(params.pe_reads)
+  .map{tuple(it[0], it[1][0], it[1][1])}
+  
+  }
+  
   emit:
-  cmbnd_ch
+  read_tuple_ch
   
 }
