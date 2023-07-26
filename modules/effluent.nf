@@ -80,6 +80,33 @@ process lineage_freyja {
 //freyja demix --version > "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log"
 }
 
+process bootstrap_freyja {
+
+  tag "Bootstrapping lineage prevalences from ${sample_id} with Freyja"
+  publishDir "${params.out_dir}/freyja_individual_bootstrapped_lineages", mode: 'copy'
+
+  input:
+  tuple val(sample_id), path(depths), path(vcf)
+  
+  output:
+  tuple val(sample_id), file("*_lineages.csv"), file("*_summarized.csv")
+  
+  when:
+  params.boot==true
+  
+  """
+  freyja boot \
+  ${vcf} \
+  ${depths} \
+  --nt ${task.cpus} \
+  --nb ${params.bootnum} \
+  --output_basename ${sample_id}_boot
+
+  """
+
+}
+
+
 process barcode_version {
 
   tag "Recording Freyja barcode version used"
@@ -184,6 +211,13 @@ workflow EFFLUENT {
       .filter { it[1].size()>0 }
       .join(freeb_vcf_ch
       .filter { it[1].size()>0 }))
+      
+      if (params.boot){
+        bootstrap_freyja(read_depths.out
+      .filter { it[1].size()>0 }
+      .join(freeb_vcf_ch
+      .filter { it[1].size()>0 }))
+      }
   } else {  
     trim_aln_ch
     .combine(ref_ch)| var_call_freyja
@@ -191,6 +225,10 @@ workflow EFFLUENT {
     .out
     .filter { it[2].size()>0 && it[1].size()>0 }
     lineage_freyja(depth_ch)
+    
+    if (params.boot){
+        bootstrap_freyja(depth_ch)
+      }
   }
   
   lineage_ch = lineage_freyja.out
@@ -200,6 +238,8 @@ workflow EFFLUENT {
   
   }
 
+  barcode_version()
+  
   // Extract mutations from VCF and clean entries
   vcf2table( ann_vcf_ch )
 
@@ -221,7 +261,6 @@ workflow EFFLUENT {
       collectTables( mutation_table_ch )
   }
   
-  barcode_version()
   
   emit:
   summarize_freyja.out
