@@ -100,7 +100,7 @@ process bootstrap_freyja {
   ${depths} \
   --nt ${task.cpus} \
   --nb ${params.bootnum} \
-  --output_basename ${sample_id}_boot
+  --output_base ${sample_id}_boot
 
   """
 
