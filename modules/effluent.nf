@@ -240,8 +240,10 @@ workflow EFFLUENT {
 
   barcode_version()
   
+  if (params.annotate_snps){
   // Extract mutations from VCF and clean entries
   vcf2table( ann_vcf_ch )
+  }
 
   // Collect and clean all previous mutation table
   if ( params.table_search_string != null ) {
@@ -251,7 +253,7 @@ workflow EFFLUENT {
                                      checkIfExists: true )
 
       previous_ch
-                .concat( vcf2table.out )
+                .concat( vcf2table( ann_vcf_ch ) )
                 .collectFile( name: "mutation_tables.csv",
                               keepHeader: true,
                               sort: { it.simpleName } )
