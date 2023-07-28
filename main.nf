@@ -38,7 +38,8 @@ Optional arguments:
  --freeb_flags            Additional options to pass freebayes during variant calling
  --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) 
  --summarize              Summarize lineage calls across all samples
- --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations   
+ --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations  
+ --annotate_snps          Generate annotated, clean, formatted output of mutations per sample in data dir 
  --sum_dir                User-defined location to save cumulative mutation table 
  --table_search_string    User-defined pathway/search string used to collect past mutation tables  
  --version                Current WasteFlow version number
