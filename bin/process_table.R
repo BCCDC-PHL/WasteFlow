@@ -84,12 +84,22 @@ if ( nrow(dt_mutation) > 0 ) {
   
   
   ## Normalization should index (seperate multiple alleles and
-  # corresponding annotations to seperate rows
+  ## corresponding annotations to seperate rows
   
   if ( nrow(dt_mutation[ ALT != ALLELE ]) > 0 ) {
+    ## Sometimes multi-allelic sites contain mixed mutation types
+    ## (snps,indels, complex), and the variant repersentation must
+    ## add padding to accommodate alt alleles example:
+    ## REF  ALT       type         allele annotated
+    ## CAC  CAA,CAAA  snp,complex  CAA, AA
+    ##
+    ## The complex mutation is C --> AA
+    ## check if the alt allele ends with annotated allele 
+    
+    if ( dt_mutation[ ALT != ALLELE ][ !endsWith( ALT, ALLELE ), .N] > 0 ) {
     stop("Normalization of VCF has failed")
-  } 
-  
+    }
+  }  
 }
 
 # Generate/append variables
