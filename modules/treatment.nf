@@ -128,12 +128,26 @@ process primer_trim {
   output:
   tuple val(sample_id), file("*.sort.bam"), file("*.sort.bam.bai")
 
+  script:
+
+  if (params.nextera){
+    ivar_cmnd = "ivar trim -e"
+  }else{
+    ivar_cmnd = "ivar trim"
+  }
+
+  if (params.primer_pairs)=="no_file"{
+    pair_cmnd = ""
+  }else{
+    pair_cmnd = "-f ${params.primer_pairs}"
+  }
   """
-  ivar trim \
+  ${ivar_cmnd} \
   -i ${sort_bam} \
   -b ${params.primers} \
   ${params.ivar_flags} \
-  -p primer_trim
+  -p primer_trim \
+  ${pair_cmnd}
 
   samtools sort -o ${sample_id}.primertrim.sort.bam primer_trim.bam
   samtools index ${sample_id}.primertrim.sort.bam
