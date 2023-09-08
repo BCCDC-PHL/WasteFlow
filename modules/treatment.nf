@@ -130,7 +130,7 @@ process primer_trim {
 
   script:
 
-  if (params.nextera){
+  if (params.primerless_reads){
     ivar_cmnd = "ivar trim -e"
   }else{
     ivar_cmnd = "ivar trim"
