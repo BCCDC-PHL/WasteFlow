@@ -132,26 +132,26 @@ process primer_trim {
 
   if (params.primerless_reads){
     ivar_cmnd = "ivar trim -e"
-  }else{
+  } else {
     ivar_cmnd = "ivar trim"
   }
 
-  if (params.primer_pairs)=="no_file"{
+  if (params.primer_pairs=="no_file"){
     pair_cmnd = ""
-  }else{
+  } else {
     pair_cmnd = "-f ${params.primer_pairs}"
   }
-  """
-  ${ivar_cmnd} \
-  -i ${sort_bam} \
-  -b ${params.primers} \
-  ${params.ivar_flags} \
-  -p primer_trim \
-  ${pair_cmnd}
+      """
+      ${ivar_cmnd} \
+      -i ${sort_bam} \
+      -b ${params.primers} \
+      ${params.ivar_flags} \
+      -p primer_trim \
+      ${pair_cmnd}
 
-  samtools sort -o ${sample_id}.primertrim.sort.bam primer_trim.bam
-  samtools index ${sample_id}.primertrim.sort.bam
-  """
+      samtools sort -o ${sample_id}.primertrim.sort.bam primer_trim.bam
+      samtools index ${sample_id}.primertrim.sort.bam
+      """
 }
 
 process qc_align {
