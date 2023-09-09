@@ -223,7 +223,7 @@ workflow EFFLUENT {
     .combine(ref_ch)| var_call_freyja
     depth_ch=var_call_freyja
     .out
-    .filter { it[2].size()>0 && it[1].size()>0 }
+    .filter { it[2].size()>0 }
     lineage_freyja(depth_ch)
     
     if (params.boot){
