@@ -52,7 +52,7 @@ process var_call_freyja {
 
   if [[ \$(grep -c "MN908947.3" ${sample_id}_freyja_vcf.tsv) -eq 0 ]];
   then
-  echo "" > ${sample_id}_freyja_vcf.tsv
+  truncate -s 0 ${sample_id}_freyja_vcf.tsv
   fi
 
   """

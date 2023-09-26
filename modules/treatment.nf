@@ -146,10 +146,10 @@ process primer_trim {
       -i ${sort_bam} \
       -b ${params.primers} \
       ${params.ivar_flags} \
-      -p primer_trim \
+      -p ${sample_id} \
       ${pair_cmnd}
 
-      samtools sort -o ${sample_id}.primertrim.sort.bam primer_trim.bam
+      samtools sort -o ${sample_id}.primertrim.sort.bam ${sample_id}.bam
       samtools index ${sample_id}.primertrim.sort.bam
       """
 }
@@ -225,7 +225,7 @@ process var_call_freebayes {
   #hard-coded - needs to be adusted to take from ref fa header
   if [[ \$(grep -c "MN908947.3" ${sample_id}_split.vcf) -eq 1 ]];
   then
-  echo "" > ${sample_id}_split.vcf
+  truncate -s 0 ${sample_id}_split.vcf
   fi
 
 
