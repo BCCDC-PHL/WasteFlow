@@ -39,7 +39,6 @@ Optional arguments:
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
  --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) 
- --summarize              Summarize lineage calls across all samples
  --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations  
  --rerun_data             Search string providing previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}")
                           Reruns Freyja demix command which is the lineage classificaion step. Useful after Freyja barcode has been updated. 
