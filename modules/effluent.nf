@@ -134,8 +134,8 @@ process summarize_freyja {
  // tuple file("*.tsv"), file("*.pdf")
   file("*.tsv")
  
- when:
-  params.summarize==true
+ //when:
+  //params.summarize==true
 
   """
   freyja aggregate \
@@ -200,7 +200,43 @@ workflow EFFLUENT {
   .fromPath(params.ref, 
   checkIfExists:true)
   
-  if (params.freebayes){
+  
+  
+  if (params.rerun_data != null){
+  
+  past_depth_vcf_ch = Channel
+  .fromPath( params.rerun_data,
+   checkIfExists: true )
+  .map{ tuple( it.baseName.split('_freyja')[0], it ) }
+  .groupTuple(sort: true)
+  .map{tuple(it[0], it[1][0], it[1][1])}
+  .filter { it[2].size()>0 }
+  .view()
+   
+   
+   if (params.freebayes){
+    aln_depth_ch = trim_aln_ch
+    aln_depth_ch
+    .combine(ref_ch)|read_depths
+    
+    to_date_ch = read_depths.out
+    .filter { it[1].size()>0 }
+    .join(freeb_vcf_ch
+    .filter { it[1].size()>0 })
+    .concat(past_depth_vcf_ch)
+   }else{
+   trim_aln_ch
+   .combine(ref_ch)| var_call_freyja
+   depth_ch=var_call_freyja
+   .out
+   .filter { it[2].size()>0 }
+   
+   to_date_ch = depth_ch
+   .concat(past_depth_vcf_ch)}
+
+   to_date_ch.view() | lineage_freyja
+  
+  }else if (params.freebayes){
   
     aln_depth_ch = trim_aln_ch
   
@@ -218,25 +254,28 @@ workflow EFFLUENT {
       .join(freeb_vcf_ch
       .filter { it[1].size()>0 }))
       }
-  } else {  
+      
+  }else {
+    
     trim_aln_ch
     .combine(ref_ch)| var_call_freyja
+    
     depth_ch=var_call_freyja
     .out
     .filter { it[2].size()>0 }
+    
     lineage_freyja(depth_ch)
     
     if (params.boot){
         bootstrap_freyja(depth_ch)
       }
+  
   }
+  
   
   lineage_ch = lineage_freyja.out
   
-  if (params.summarize){
-    lineage_ch.collect() | summarize_freyja
-  
-  }
+  lineage_ch.collect() | summarize_freyja
 
   barcode_version()
   
@@ -263,8 +302,6 @@ workflow EFFLUENT {
       collectTables( mutation_table_ch )
   }
   
-  
   emit:
   summarize_freyja.out
-  
 }
