@@ -33,6 +33,8 @@ Optional arguments:
  --conda_cache            User-defined location to save conda env [/path/to/conda/env/location/]
  --adapters               Additional adapters to include during trimming with fastp
  --primers                Bed file containing primer scheme for trimming with iVar
+ --primerless_reads       iVar trim include reads that are outside of primer regions/ no primers (ie. Nextera)
+ --primer_pairs           iVar trim specify primer pairs .tsv file when amplicons are fragmented (ie. Nextera)
  --ivar_flags             Additional options to pass to iVar during primer/ quality trimming
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
