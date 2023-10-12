@@ -39,9 +39,11 @@ Optional arguments:
  --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) 
  --summarize              Summarize lineage calls across all samples
  --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations  
+ --rerun_data             Search string providing previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}")
+                          Reruns Freyja demix command which is the lineage classificaion step. Useful after Freyja barcode has been updated. 
  --annotate_snps          Generate annotated, clean, formatted output of mutations per sample in data dir 
  --sum_dir                User-defined location to save cumulative mutation table 
- --table_search_string    User-defined pathway/search string used to collect past mutation tables  
+ --table_search_string    User-defined pathway/search string used to collect past mutation tables. Must be quoted.  
  --version                Current WasteFlow version number
  --help                   This usage statement
         """
