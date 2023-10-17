@@ -15,8 +15,8 @@ dependencies:
   - brotlipy=0.7.0=py39h27cfd23_1003
   - bzip2=1.0.8=h7b6447c_0
   - c-ares=1.19.0=h5eee18b_0
-  - ca-certificates=2023.01.10=h06a4308_0
-  - certifi=2022.12.7=py39h06a4308_0
+  - ca-certificates=2023.7.22=hbcca054_0
+  - certifi=2023.7.22=pyhd8ed1ab_0
   - cffi=1.15.1=py39h74dc2b5_0
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
   - click=8.0.4=py39h06a4308_0
@@ -33,7 +33,7 @@ dependencies:
   - fmt=9.1.0=hdb19cb5_0
   - fonttools=4.25.0=pyhd3eb1b0_0
   - freetype=2.12.1=h4a9f257_0
-  - freyja=1.4.2=pyhdfd78af_0
+  - freyja=1.4.7=pyhdfd78af_0
   - giflib=5.2.1=h5eee18b_1
   - htslib=1.17=h6bc39ce_0
   - icu=68.1=h2531618_0
@@ -96,7 +96,7 @@ dependencies:
   - numpy-base=1.23.5=py39h1e6e340_0
   - openmpi=4.1.2=hbfc84c5_0
   - openssh=9.1p1=hf695f80_0
-  - openssl=1.1.1t=h7f8727e_0
+  - openssl=1.1.1w=hd590300_0
   - osqp=0.6.2.post0=py39h4661b88_4
   - packaging=22.0=py39h06a4308_0
   - pandas=1.5.2=py39h417a72b_0
