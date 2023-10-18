@@ -26,7 +26,7 @@ fi
 process merge_reps {
 
 tag "Merging reads from replicates of same sample"
-publishDir "${params.data_dir}", mode: 'copy'
+publishDir "${params.out_dir}/combined_replicate_reads", mode: 'copy'
 
 input:
 tuple val(sample_id), path(fwd_reps), path(rev_reps)
