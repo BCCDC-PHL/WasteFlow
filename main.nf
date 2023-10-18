@@ -27,24 +27,26 @@ Mandatory arguments:
 
 
 Optional arguments:
- --combine_reps           Include this option to combined sequencing replicates of the same sample 
+ --combine_reps           Include this option to combined sequencing replicates of the same sample [default: off]
  --trim_galore            Include this switch to use trim-galore to trim adapters/ low qual bases [default: fastp]
  --bwa                    Include this switch to use bwa-mem to align reads to reference [minimap2]
  --conda_cache            User-defined location to save conda env [/path/to/conda/env/location/]
- --adapters               Additional adapters to include during trimming with fastp
+ --adapters               Additional adapters to include during trimming with fastp 
  --primers                Bed file containing primer scheme for trimming with iVar
- --primerless_reads       iVar trim include reads that are outside of primer regions/ no primers (ie. Nextera)
- --primer_pairs           iVar trim specify primer pairs .tsv file when amplicons are fragmented (ie. Nextera)
+ --primerless_reads       iVar trim include reads that are outside of primer regions/ no primers (ie. Nextera) [off]
+ --primer_pairs           iVar trim specify primer pairs .tsv file when amplicons are fragmented (ie. Nextera) [none]
  --ivar_flags             Additional options to pass to iVar during primer/ quality trimming
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
- --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) 
- --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations  
- --rerun_data             Search string providing previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}")
-                          Reruns Freyja demix command which is the lineage classificaion step. Useful after Freyja barcode has been updated. 
- --annotate_snps          Generate annotated, clean, formatted output of mutations per sample in data dir 
- --sum_dir                User-defined location to save cumulative mutation table 
- --table_search_string    User-defined pathway/search string used to collect past mutation tables. Must be quoted.  
+ --demixdepth             The minimum read depth for a site to be considered in Freyja demix. Collapses indistinguishable lineages. [10]
+ --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) [off]
+ --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations [100]  
+ --rerun_lins             Search string providing previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}")
+                          Reruns Freyja demix command which is the lineage classificaion step. 
+                          Useful after Freyja barcode has been updated. [off]
+ --annotate_snps          Generate annotated, clean, formatted output of mutations per sample in data dir [off]
+ --mut_dir                User-defined location to save cumulative mutation table [none]
+ --rerun_mut              User-defined pathway/search string used to collect past mutation tables. Must be quoted. [none]  
  --version                Current WasteFlow version number
  --help                   This usage statement
         """
@@ -86,10 +88,13 @@ log.info """
 ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░░░░╚══════╝░╚════╝░░░░╚═╝░░░╚═╝░░
 
 \n===================================================================================
-data directory: ${params.data_dir}
+
+input directory: ${params.data_dir}
 reference genome: ${params.ref}
 results directory: ${params.out_dir}
-previous mutation table search string: ${params.table_search_string != null ? params.table_search_string : 'working with current data' }
+previous mutation tables: ${params.rerun_mut != null ? params.rerun_mut : 'no prior data provided' }
+reclassifying lineages from: ${params.rerun_lins != null ? params.rerun_lins : 'no prior data provided' }
+
 """
 
 /**
