@@ -63,36 +63,36 @@ process lineage_freyja {
     
   tag "Calculating relative viral lineage abundances from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
+  errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
 
   output:
-  tuple val(sample_id), file("*.tsv")
+  tuple val(sample_id), file("*.tsv"), file("*.yml") 
 
   """
   freyja demix\
+  --depthcutoff ${params.demixdepth} \
+  --output ${sample_id}_freyja_lineage_summary.tsv \
   ${vcf} \
-  ${depths} \
-  --output ${sample_id}_freyja_lineage_summary.tsv
+  ${depths}
   
   """
-//freyja demix --version > "${params.out_dir}/freyja_overall_lineage_summary/barcode_version.log"
+  
 }
 
 process bootstrap_freyja {
 
   tag "Bootstrapping lineage prevalences from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_bootstrapped_lineages", mode: 'copy'
+  errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }  
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
   
   output:
-  tuple val(sample_id), file("*_lineages.csv"), file("*_summarized.csv")
-  
-  when:
-  params.boot==true
+  tuple val(sample_id), file("*_lineages.csv"), file("*_summarized.csv"), file("*_lineages.yml")
   
   """
   freyja boot \
@@ -100,7 +100,8 @@ process bootstrap_freyja {
   ${depths} \
   --nt ${task.cpus} \
   --nb ${params.bootnum} \
-  --output_base ${sample_id}_boot
+  --output_base ${sample_id}_boot \
+  --depthcutoff ${params.demixdepth}
 
   """
 
@@ -252,7 +253,7 @@ workflow EFFLUENT {
         bootstrap_freyja(read_depths.out
       .filter { it[1].size()>0 }
       .join(freeb_vcf_ch
-      .filter { it[1].size()>0 }))
+      .filter { it[1].size()>0 }))   
       }
       
   }else {
@@ -273,7 +274,7 @@ workflow EFFLUENT {
   }
   
   
-  lineage_ch = lineage_freyja.out
+  lineage_ch = lineage_freyja.out.view()
   
   lineage_ch.collect() | summarize_freyja
 
