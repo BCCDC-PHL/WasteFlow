@@ -203,10 +203,10 @@ workflow EFFLUENT {
   
   
   
-  if (params.rerun_data != null){
+  if (params.rerun_lins != null){
   
   past_depth_vcf_ch = Channel
-  .fromPath( params.rerun_data,
+  .fromPath( params.rerun_lins,
    checkIfExists: true )
   .map{ tuple( it.baseName.split('_freyja')[0], it ) }
   .groupTuple(sort: true)
@@ -286,10 +286,10 @@ workflow EFFLUENT {
   }
 
   // Collect and clean all previous mutation table
-  if ( params.table_search_string != null ) {
+  if ( params.rerun_mut != null ) {
       // Run with current and previous data
       previous_ch = Channel
-                          .fromPath( params.table_search_string,
+                          .fromPath( params.rerun_mut,
                                      checkIfExists: true )
 
       previous_ch
