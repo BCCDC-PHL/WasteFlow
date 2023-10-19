@@ -212,8 +212,6 @@ workflow EFFLUENT {
   .groupTuple(sort: true)
   .map{tuple(it[0], it[1][0], it[1][1])}
   .filter { it[2].size()>0 }
-  .view()
-   
    
    if (params.freebayes){
     aln_depth_ch = trim_aln_ch
@@ -235,7 +233,7 @@ workflow EFFLUENT {
    to_date_ch = depth_ch
    .concat(past_depth_vcf_ch)}
 
-   to_date_ch.view() | lineage_freyja
+   to_date_ch | lineage_freyja
   
   }else if (params.freebayes){
   
@@ -273,8 +271,7 @@ workflow EFFLUENT {
   
   }
   
-  
-  lineage_ch = lineage_freyja.out.view()
+  lineage_ch = lineage_freyja.out
   
   lineage_ch.collect() | summarize_freyja
 
