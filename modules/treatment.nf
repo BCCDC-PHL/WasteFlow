@@ -223,7 +223,7 @@ process var_call_freebayes {
   ${sample_id}_split.vcf 
   
   #hard-coded - needs to be adusted to take from ref fa header
-  if [[ \$(grep -c "MN908947.3" ${sample_id}_split.vcf) -eq 1 ]];
+  if [[ \$(grep -c "MN908947.3" ${sample_id}_split.vcf) -eq 0 ]];
   then
   truncate -s 0 ${sample_id}_split.vcf
   fi
