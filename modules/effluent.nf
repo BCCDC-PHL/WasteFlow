@@ -107,18 +107,28 @@ process bootstrap_freyja {
 
 }
 
-
 process barcode_version {
 
-  tag "Recording Freyja barcode version used"
-  publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
+  tag "Logging WasteFlow pipeline metadata"
+  publishDir "${params.out_dir}/pipeline_reports", mode: 'copy'
 
   output:
   file("*.log")
   
   """
-  echo \$(freyja demix --version) > \$(date +%Y%m%d)_barcode.log
-
+  current_time=\$(date +%Y%m%d-%H%M%S)
+  echo \$(freyja demix --version) > \${current_time}_WasteFlow.log
+  echo -e "Pipeline name: ${workflow.manifest.name}  
+  Pipeline version: ${workflow.manifest.version}  
+  Nextflow version: ${nextflow.version}  
+  Execution start time: ${workflow.start}
+  Executed command: ${workflow.commandLine} 
+  Data directory: ${params.data_dir}
+  Results directory: ${params.out_dir}
+  Project directory: ${workflow.projectDir}
+  Launch directory: ${workflow.launchDir} 
+  Session ID: ${workflow.sessionId} " >> \${current_time}_WasteFlow.log
+  
   """
 
 }
