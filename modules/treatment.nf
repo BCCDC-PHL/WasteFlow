@@ -166,19 +166,19 @@ process qc_align {
   tuple file("*.depths"), file("*covstats")
 
   """
-  samtools depth \
+  echo -e ${sample_id} \$(samtools depth \
   -a \
   -H \
   -q 30 \
   -Q 20 \
   --reference ${ref} \
-  ${trim_sort_bam} \
+  ${trim_sort_bam}) \
   > ${sample_id}.depths
 
-  samtools coverage \
-  -H \
-  -d 0 \
+  echo -e ${sample_id} \$(samtools coverage \
   ${trim_sort_bam} \
+  -H \
+  -d 0) \
   > ${sample_id}.covstats
   """
 }
