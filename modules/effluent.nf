@@ -64,7 +64,7 @@ process lineage_freyja {
   tag "Calculating relative viral lineage abundances from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
   //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }
-  errorStretegy 'ignore'
+  errorStrategy 'ignore'
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
@@ -87,7 +87,8 @@ process bootstrap_freyja {
 
   tag "Bootstrapping lineage prevalences from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_bootstrapped_lineages", mode: 'copy'
-  errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }  
+  //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }  
+  errorStrategy 'ignore'
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
