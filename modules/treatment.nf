@@ -299,7 +299,7 @@ workflow TREATMENT {
   }
   
   trim_aln_ch = primer_trim(aln_ch)
-  trim_aln_ch | qc_align.combine(ref_ch)
+  trim_aln_ch.combine(ref_ch) | qc_align
   
   //generate mutation table input: 
   trim_aln_ch
