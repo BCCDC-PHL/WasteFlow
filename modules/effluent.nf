@@ -63,7 +63,8 @@ process lineage_freyja {
     
   tag "Calculating relative viral lineage abundances from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
-  errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }
+  //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }
+  errorStretegy 'ignore'
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
@@ -142,11 +143,7 @@ process summarize_freyja {
   file("*")
 
   output:
- // tuple file("*.tsv"), file("*.pdf")
   file("*.tsv")
- 
- //when:
-  //params.summarize==true
 
   """
   freyja aggregate \
