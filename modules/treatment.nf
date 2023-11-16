@@ -160,19 +160,26 @@ process qc_align {
   publishDir "${params.out_dir}/QC_reports/alignments", mode: 'copy'
 
   input:
-  tuple val(sample_id), path(trim_sort_bam), path(trim_sort_bai)
+  tuple val(sample_id), path(trim_sort_bam), path(trim_sort_bai), file(ref)
 
   output:
-  tuple file("*.mpileup"), file("*idxstats")
+  tuple file("*.depths"), file("*covstats")
 
   """
-  samtools mpileup \
+  samtools depth \
+  -a \
+  -H \
+  -q 30 \
+  -Q 20 \
+  --reference ${ref} \
   ${trim_sort_bam} \
-  -o ${sample_id}.mpileup
+  > ${sample_id}.depths
 
-  samtools idxstats \
+  samtools coverage \
+  -H \
+  -d 0 \
   ${trim_sort_bam} \
-  > ${sample_id}.idxstats
+  > ${sample_id}.covstats
   """
 }
 
@@ -244,6 +251,8 @@ process annotate_snpeff {
 
   tag "Annotating vcf file of ${sample_id} with SnpEff"
   publishDir "${params.out_dir}/snpeff_vcf_annotation", mode: 'copy'
+  errorStrategy 'retry'
+  maxRetries 2
 
   input:
   tuple val(sample_id), file(free_vcf)
@@ -290,7 +299,7 @@ workflow TREATMENT {
   }
   
   trim_aln_ch = primer_trim(aln_ch)
-  trim_aln_ch | qc_align
+  trim_aln_ch | qc_align.combine(ref_ch)
   
   //generate mutation table input: 
   trim_aln_ch
