@@ -92,7 +92,10 @@ WasteFlow was designed to allow multiple workflows for various pathogens. For ex
 --primerless_reads 
 --primer_pairs 
 
-The default workflow with only data_dir and output_dir specified:
+**The default workflow:**
+
+```nextflow run BCCDC-PHL/WasteFlow -r v2.0.1 --data_dir /mandatory/path/to/ww/fastqs
+```
 
 ```mermaid
 flowchart TB
@@ -160,6 +163,198 @@ flowchart TB
     v23 --> v24
     v24 --> v25
     v26 --> v27
+```
+**The alternative workflow:**
+
+```nextflow run BCCDC-PHL/WasteFlow -r v2.0.1 --data_dir /mandatory/path/to/ww/fastqs/ --out_dir /alternative/results/folder/ --bwa --trim_galore --freebayes --combine_reps --primerless_reads --primer_pairs /path/to/tsv/of/primerPairs.tsv --boot --bootnum 10 --demixdepth 100 --rerun_mut "/path/to/past/mut_tables/*{.csv}" --mut_dir /mandatory/path/to/cumulative/mut_table/output --rerun_lins "/path/to/past/freyja_var/outputs/*{.txt,.tsv}"
+``` 
+
+Note the quotation marks around --rerun_mut and --rerun_lins paths.
+
+```mermaid
+flowchart TB
+    subgraph "INPUT "
+    v0["_R1_*.{fastq,fq,fastq.gz,fq.gz}"]
+    v4["_R2_*.{fastq,fq,fastq.gz,fq.gz}"]
+    v10["ref.fasta"]
+    v25["ref.fasta"]
+    v26["previous Freyja 
+    lineage *.tsv 
+    +
+    read depth *.txt files
+    (per sample)"]
+    v43["previous annotated 
+    mutation *.csv files
+    (per sample)"]
+    end
+    subgraph INFLUENT
+    v9([merge_reps])
+    v1(( ))
+    end
+    subgraph TREATMENT
+    v11([clean_trim_galore])
+    v13([qc_reads])
+    v17([align_bwa])
+    v18([primer_trim])
+    v20([qc_align])
+    v23([var_call_freebayes])
+    v24([annotate_snpeff])
+    v12["*_val_{1,2}.fq.gz,*fastqc.zip"]
+    v15["*_val_{1,2}.fq.gz"]
+    v19["*.sort.{bam, bam.bai}"]
+    v22(( ))
+    v31(( ))
+    end
+    subgraph "OUTPUT"
+    v14["multiqc_report.html"]
+    v21["*.{depths,covstats}"]
+    v40["freyja_lineage_summary.tsv"]
+    v42["*_WasteFlow.log"]
+    end
+    subgraph EFFLUENT
+    v32([read_depths])
+    v37([lineage_freyja])
+    v39([summarize_freyja])
+    v41([barcode_version])
+    v44([vcf2table])
+    v47([collectTables])
+    v27["*_split.vcf, *_depths.txt
+    +
+    previous"]
+    v38(( ))
+    v45["new *.csv files
+    +
+    previous"]
+    end
+    v0 --> v1
+    v4 --> v1
+    v1 --> v9
+    v9 --> v11
+    v10 --> v15
+    v10 --> v19
+    v10 --> v22
+    v11 --> v12
+    v11 --> v15
+    v12 --> v13
+    v13 --> v14
+    v15 --> v17
+    v17 --> v18
+    v18 --> v19
+    v18 --> v22
+    v18 --> v31
+    v19 --> v20
+    v20 --> v21
+    v22 --> v23
+    v23 --> v24
+    v23 --> v27
+    v24 --> v44
+    v25 --> v31
+    v26 --> v27
+    v31 --> v32
+    v32 --> v27
+    v27 --> v37
+    v37 --> v38
+    v38 --> v39
+    v39 --> v40
+    v41 --> v42
+    v43 --> v45
+    v44 --> v45
+    v45 --> v47
+```
+**BCCDC workflow:**
+
+```nextflow run BCCDC-PHL/WasteFlow -r v2.0.1 --data_dir /mandatory/path/to/ww/fastqs/ --combine_reps --primerless_reads --primer_pairs /path/to/tsv/of/primerPairs.tsv --annotate_snps --rerun_lins "/path/to/past/freyja_var/outputs/*{.txt,.tsv}"
+```
+
+```mermaid
+flowchart TB
+    subgraph "INPUT"
+    v0["_R1_*.{fastq,fq,fastq.gz,fq.gz}"]
+    v4["_R2_*.{fastq,fq,fastq.gz,fq.gz}"]
+    v10["ref.fasta"]
+    v25["ref.fasta"]
+    v26["previous Freyja 
+    lineage *.tsv 
+    +
+    read depth *.txt files
+    (per sample)"]
+    v41["previous annotated 
+    mutation *.csv files
+    (per sample)"]
+    end
+    subgraph INFLUENT
+    v9([merge_reps])
+    v1(( ))
+    end
+    subgraph TREATMENT
+    v11([clean_fastp])
+    v13([qc_reads])
+    v17([align_minimap2])
+    v18([primer_trim])
+    v20([qc_align])
+    v23([var_call_freebayes])
+    v24([annotate_snpeff])
+    v12["*{R1,R2}.trim.fastq.gz,*failed_reads.txt,
+    *fastp.html,*fastp.json"]
+    v15["*{R1,R2}.trim.fastq.gz"]
+    v19["*.sort.{bam, bam.bai}"]
+    v22(( ))
+    v31(( ))
+    end
+    subgraph "OUTPUT"
+    v14["multiqc_report.html"]
+    v21["*.{depths,covstats}"]
+    v38["freyja_lineage_summary.tsv"]
+    v40["*_WasteFlow.log"]
+    end
+    subgraph EFFLUENT
+    v32([var_call_freyja])
+    v35([lineage_freyja])
+    v37([summarize_freyja])
+    v39([barcode_version])
+    v42([vcf2table])
+    v45([collectTables])
+    v27["*.tsv, *_depths.txt
+    +
+    previous"]
+    v36(( ))
+    v43["new *.csv files
+    +
+    previous"]
+    end
+    v0 --> v1
+    v4 --> v1
+    v1 --> v9
+    v9 --> v11
+    v10 --> v15
+    v10 --> v19
+    v10 --> v22
+    v11 --> v12
+    v11 --> v15
+    v12 --> v13
+    v13 --> v14
+    v15 --> v17
+    v17 --> v18
+    v18 --> v19
+    v18 --> v22
+    v18 --> v31
+    v19 --> v20
+    v20 --> v21
+    v22 --> v23
+    v23 --> v24
+    v24 --> v42
+    v25 --> v31
+    v26 --> v27
+    v31 --> v32
+    v32 --> v27
+    v27 --> v35
+    v35 --> v36
+    v36 --> v37
+    v37 --> v38
+    v39 --> v40
+    v41 --> v43
+    v42 --> v43
+    v43 --> v45
 ```
 ## References
 
