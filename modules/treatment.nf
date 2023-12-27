@@ -315,4 +315,5 @@ workflow TREATMENT {
   trim_aln_ch
   freeb_vcf_ch
   ann_vcf_ch
+  ref_ch
 }

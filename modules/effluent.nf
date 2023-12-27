@@ -203,13 +203,9 @@ workflow EFFLUENT {
   trim_aln_ch
   freeb_vcf_ch
   ann_vcf_ch
+  ref_ch
   
   main:
-  ref_ch = Channel
-  .fromPath(params.ref, 
-  checkIfExists:true)
-  
-  
   
   if (params.rerun_lins != null){
   
