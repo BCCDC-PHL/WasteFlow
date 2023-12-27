@@ -104,7 +104,6 @@ flowchart TB
     v0["*_{R{1,2}_001,R{1,2},{1,2}}*
     *.{fastq,fq,fastq.gz,fq.gz}"]
     v2["ref.fasta"]
-    v18["ref.fasta"]
     end
     subgraph TREATMENT
     v3([clean_fastp])
@@ -141,6 +140,7 @@ flowchart TB
     v2 --> v7
     v2 --> v11
     v2 --> v14
+    v2 --> v19
     v1 --> v3
     v3 --> v4
     v3 --> v7
@@ -156,7 +156,6 @@ flowchart TB
     v14 --> v15
     v15 --> v16
     v16 --> v17
-    v18 --> v19
     v19 --> v20
     v20 --> v21
     v21 --> v22
@@ -179,7 +178,6 @@ flowchart TB
     v0["_R1_*.{fastq,fq,fastq.gz,fq.gz}"]
     v4["_R2_*.{fastq,fq,fastq.gz,fq.gz}"]
     v10["ref.fasta"]
-    v25["ref.fasta"]
     v26["previous Freyja 
     lineage *.tsv 
     +
@@ -235,6 +233,7 @@ flowchart TB
     v10 --> v15
     v10 --> v19
     v10 --> v22
+    v10 --> v31
     v11 --> v12
     v11 --> v15
     v12 --> v13
@@ -250,7 +249,6 @@ flowchart TB
     v23 --> v24
     v23 --> v27
     v24 --> v44
-    v25 --> v31
     v26 --> v27
     v31 --> v32
     v32 --> v27
@@ -275,7 +273,6 @@ flowchart TB
     v0["_R1_*.{fastq,fq,fastq.gz,fq.gz}"]
     v4["_R2_*.{fastq,fq,fastq.gz,fq.gz}"]
     v10["ref.fasta"]
-    v25["ref.fasta"]
     v26["previous Freyja 
     lineage *.tsv 
     +
@@ -332,6 +329,7 @@ flowchart TB
     v10 --> v15
     v10 --> v19
     v10 --> v22
+    v10 --> v31
     v11 --> v12
     v11 --> v15
     v12 --> v13
@@ -346,7 +344,6 @@ flowchart TB
     v22 --> v23
     v23 --> v24
     v24 --> v42
-    v25 --> v31
     v26 --> v27
     v31 --> v32
     v32 --> v27
