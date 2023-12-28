@@ -25,7 +25,7 @@ fi
 **/
 process merge_reps {
 
-tag "Merging reads from replicates of same sample"
+tag "Merging reads from replicates of ${sample_id}"
 publishDir "${params.out_dir}/combined_replicate_reads", mode: 'copy'
 
 input:
