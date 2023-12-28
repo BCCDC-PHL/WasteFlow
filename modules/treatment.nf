@@ -11,7 +11,7 @@ process clean_trim_galore {
   tuple val(sample_id), path(fwd_reads), path(rev_reads)
 
   output:
-  tuple val(sample_id), path("*_val_1.fq.gz"), file("*_val_2.fq.gz"), file("*fastqc.zip")//only works once fastqc.zip for all readpairs has been made
+  tuple val(sample_id), path("*_val_1.fq*"), file("*_val_2.fq*"), file("*fastqc.zip")//only works once fastqc.zip for all readpairs has been made
 
   when:
   params.trim_galore == true
@@ -107,11 +107,13 @@ process align_bwa {
   params.bwa == true
 
   """
+  bwa index ${ref}
+
   bwa mem -t ${task.cpus} \
   ${ref} \
   ${trim_for} \
   ${trim_rev} \
-  | samtools sort -o ${sample_id}.sort.bam \
+  | samtools sort -o -@ ${task.cpus} \
   | samtools view -F4 -b -o  ${sample_id}.sort.bam -
   samtools index ${sample_id}.sort.bam
 
