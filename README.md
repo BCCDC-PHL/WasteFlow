@@ -77,6 +77,7 @@ The pipeline requires the following files:
 - Reference genome for guided read alignment [./data_dir/sequences.fasta]
 - Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq]. 
 Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error.
+To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#-
 - Primer scheme bed file [./data_dir/primer[vers].bed]
 
 ## Output
