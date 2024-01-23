@@ -192,7 +192,7 @@ process collectTables {
   """
   Rscript ${params.bin}/mutation_watchlist.R \
     --concat_mutations=$MUTATION_TABLE_AGGREGATE \
-    --outdir="${params.sum_dir}"
+    --outdir="${params.mut_dir}"
   """
 }
 
