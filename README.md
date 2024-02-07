@@ -67,7 +67,7 @@ nextflow run main.nf -profile conda --data_dir /path/to/input/data
 nextflow run j3551ca/WasteFLow -profile conda --data_dir /path/to/input/data
 
 # Run all modules + collate all *mutation_tables.csv, construct mutation measurements, and write cumulative file
-nextflow run main.nf -profile conda --data_dir /path/to/input/data --table_search_string "/path/to/dir/holding/*mutation_table.csv" --sum_dir /path/to/write/cumlative_file  
+nextflow run main.nf -profile conda --data_dir /path/to/input/data --rerun_mut "/path/to/dir/holding/*mutation_table.csv" --mut_dir /path/to/write/cumlative_file  
 ```
 
 ## Input
@@ -265,7 +265,8 @@ flowchart TB
 **BCCDC workflow:**
 
 ```
-nextflow run BCCDC-PHL/WasteFlow -r v2.0.1 --data_dir /mandatory/path/to/ww/fastqs/ --combine_reps --primerless_reads --primer_pairs /path/to/tsv/of/primerPairs.tsv --annotate_snps --rerun_lins "/path/to/past/freyja_var/outputs/*{.txt,.tsv}"
+nextflow run BCCDC-PHL/WasteFlow -r v2.0.1 --data_dir /mandatory/path/to/ww/fastqs/ --combine_reps --primerless_reads --primer_pairs /path/to/tsv/of/primerPairs.tsv --rerun_lins "/path/to/past/freyja_var/outputs/*{.txt,.tsv}" --rerun_mut "/path/to/past/annotated_mutation/outputs/*.csv"
+--mut_dir /path/to/cumulative/annotated/mutation/table/output
 ```
 
 ```mermaid
