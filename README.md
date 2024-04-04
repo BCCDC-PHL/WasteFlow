@@ -88,7 +88,7 @@ WasteFlow was designed to allow multiple workflows for various pathogens. For ex
 
 --combine_reps This allows multiple sequencing replicates to be combined into one file containing all forward reads and one file containing all reverse reads. 
 
---annotate_snps This will produce a table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. 
+--annotate_snps This will produce a table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. NOTE: this behaviour (ie. vcf2table process) is automatically active if you are using --rerun_mut.
 
 --primerless_reads 
 --primer_pairs 
