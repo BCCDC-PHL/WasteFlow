@@ -86,9 +86,9 @@ To merge replicates of the same sample (--combine_reps) the replicate number mus
 
 WasteFlow was designed to allow multiple workflows for various pathogens. For example, reads can be processed with trim-galore or fastp, alignments can be generated with bwa or minimap2, variants can be called with iVar or Freebayes, and lineage calls made by Freyja can be performed on one directory or multiple. The modularity of Nextflow facilitates the addition of alternate packages. WasteFlow has currently been tested on SARS-CoV-2. Common workflows are outlined below: 
 
---combine_reps This allows multiple sequencing replicates to be combined into one file containing all forward reads and one file containing all reverse reads. 
+--combine_reps This allows multiple sequencing replicates to be combined into one file containing all forward reads and one file containing all reverse reads. To merge replicates of the same sample the replicate number must be present in the filename as -#- (ex. prefix-2-suf_fix.fq).
 
---annotate_snps This will produce a table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. NOTE: this behaviour (ie. vcf2table process) is automatically active if you are using --rerun_mut.
+--annotate_snps This will produce a CSV table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. NOTE: this behaviour (ie. vcf2table process) is automatically active if you are using --rerun_mut.
 
 --primerless_reads 
 --primer_pairs 
