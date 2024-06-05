@@ -83,7 +83,7 @@ dt_region <- dt_clean[ , .( VAF = round( (sum(AO) / sum(DP)), digits= 4 ), LOCAT
   , REGION := NULL ]
 
 # Combine
-dt_final <- rbind(dt_location, dt_region)[ , setorder(.SD, LOCATION, ANNO, COLLECTION_DATE)]
+dt_final <- rbind(dt_location, dt_region)[ , setorder(.SD, COLLECTION_DATE, ANNO, LOCATION)]
 
 
 # Write to file
