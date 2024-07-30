@@ -15,7 +15,12 @@ option_list = list(
               type="character",
               default=NULL,
               help="Output dir to write report to",
-              metavar="character")
+              metavar="character"),
+  make_option(c("-t", "--DT_threads"),
+              type="numeric",
+              default=NULL,
+              help="Set number of threads data.table uses",
+              metavar="numeric")
   )
 
 # Converting the provided commands to usable R objects
@@ -28,8 +33,8 @@ if ( is.null(opt$concat_mutations) | is.null(opt$outdir) ){
 }
 
 message("Running script with the following options:")
-message(sprintf("--concat_mutations : %s\n--outdir : %s",
-                opt$concat_mutations, opt$outdir))
+message(sprintf("--concat_mutations : %s\n--outdir : %s\n--DT_threads : %s"",
+                opt$concat_mutations, opt$outdir, opt$DT_threads))
 
 
 ###############################
@@ -44,7 +49,7 @@ suppressPackageStartupMessages( library(data.table) )
 message("Read and clean mutation table...")
 ###############################
 
-setDTthreads(threads = 60)
+setDTthreads(threads = opt$DT_threads)
 
 dt_concat_mutations <- fread(file = opt$concat_mutations,
                              sep = ",",
