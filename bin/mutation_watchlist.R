@@ -44,6 +44,8 @@ suppressPackageStartupMessages( library(data.table) )
 message("Read and clean mutation table...")
 ###############################
 
+setDTthreads(threads = 60)
+
 dt_concat_mutations <- fread(file = opt$concat_mutations,
                              sep = ",",
                              header = TRUE,
