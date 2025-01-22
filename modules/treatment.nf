@@ -248,7 +248,7 @@ process var_call_freebayes {
   """
 }
 
-//snpEff download -v MN908947.3 --> goes to /home/jess.cal/.conda/envs/snpeff_env/share/snpeff-5.1-2/./data/
+//snpEff download -v MN908947.3 --> goes to .conda/envs/snpeff_env/share/snpeff-5.1-2/./data/
 process annotate_snpeff {
 
   tag "Annotating vcf file of ${sample_id} with SnpEff"
@@ -299,12 +299,18 @@ workflow TREATMENT {
     .map{ it[0,1,2] }
     .combine(ref_ch))
   }
+
+  if (!params.skip_trim) {
+    post_aln_ch = primer_trim(aln_ch)
+  } else {
+    post_aln_ch = aln_ch
+  }
   
-  trim_aln_ch = primer_trim(aln_ch)
-  trim_aln_ch.combine(ref_ch) | qc_align
+  //trim_aln_ch = primer_trim(aln_ch)
+  post_aln_ch.combine(ref_ch) | qc_align
   
   //generate mutation table input: 
-  trim_aln_ch
+  post_aln_ch
   .combine(ref_ch)| var_call_freebayes 
   
   freeb_vcf_ch = var_call_freebayes.out
@@ -314,7 +320,7 @@ workflow TREATMENT {
   ann_vcf_ch = annotate_snpeff.out
   
   emit:
-  trim_aln_ch
+  post_aln_ch
   freeb_vcf_ch
   ann_vcf_ch
   ref_ch
