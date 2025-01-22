@@ -18,10 +18,10 @@ is sequenced. This pipeline, WasteFlow, written by JMC in Nextflow aims to provi
 - [Workflow](#workflow)
 - [References](#references)
 
-## Quick-Start Guide
+## Quick Start
 
 ```
-nextflow run main.nf -profile conda --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed --conda_cache /home/jess.cal/caches/  
+nextflow run main.nf -profile conda --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed --conda_cache /home/user/caches/  
 ```
 
 ## Dependencies
@@ -57,7 +57,7 @@ cd WasteFlow
 nextflow run main.nf -profile conda --data_dir /path/to/input/data
 ```
 
-## Quick Start
+## Quick-Start Guide
 
 ```
 # Run all modules from the WasteFlow directory after cloning repository:
@@ -80,12 +80,11 @@ Ensure the absolute path of the directory containing data to be analyzed is used
 To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#-
 - Primer scheme bed file [./data_dir/primer[vers].bed]
 
-| Input       | Option | Description | Notes                                                                                                
-|:--------------|------------:|:-----------------------------------------------------------------------------------------------------------|
+| Input       | Option | Description | Notes   |                                                                                             
+|:--------------|:------------|:-----------------------------------------------------------------------------------------------------------|:-----------|
 | Reference genome | --ref       | Reference genome of pathogen of interest for guided read alignment | ./resources/cov2_ref.fasta                                                                      |
-| Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error.
-To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
-| Bed file | --primers | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                                                          |
+| Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
+| Bed file | --primers | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
 | Results directory | --out_dir          | Path of directory to output results into |                                       |          
 
 
@@ -372,4 +371,4 @@ flowchart TB
 ```
 ## References
 
-1. Karthikeyan, S., Levy, J. I., De Hoff, P., Humphrey, G., Birmingham, A., Jepsen, K., Farmer, S., Tubb, H. M., Valles, T., Tribelhorn, C. E., Tsai, R., Aigner, S., Sathe, S., Moshiri, N., Henson, B., Mark, A. M., Hakim, A., Baer, N. A., Barber, T., Belda-Ferre, P., … Knight, R. (2022). Wastewater sequencing uncovers early, cryptic SARS-CoV-2 variant transmission. medRxiv : the preprint server for health sciences, 2021.12.21.21268143. https://doi.org/10.1101/2021.12.21.21268143
+1. Karthikeyan, S., Levy, J.I., De Hoff, P. et al. Wastewater sequencing reveals early cryptic SARS-CoV-2 variant transmission. Nature 609, 101–108 (2022). https://doi.org/10.1038/s41586-022-05049-6
