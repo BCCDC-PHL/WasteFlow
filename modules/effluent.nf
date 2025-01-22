@@ -201,7 +201,7 @@ process collectTables {
 workflow EFFLUENT {
 
   take:
-  trim_aln_ch
+  post_aln_ch
   freeb_vcf_ch
   ann_vcf_ch
   ref_ch
@@ -219,7 +219,7 @@ workflow EFFLUENT {
   .filter { it[2].size()>0 }
    
    if (params.freebayes){
-    aln_depth_ch = trim_aln_ch
+    aln_depth_ch = post_aln_ch
     aln_depth_ch
     .combine(ref_ch)|read_depths
     
@@ -229,7 +229,7 @@ workflow EFFLUENT {
     .filter { it[1].size()>0 })
     .concat(past_depth_vcf_ch)
    }else{
-   trim_aln_ch
+   post_aln_ch
    .combine(ref_ch)| var_call_freyja
    depth_ch=var_call_freyja
    .out
@@ -242,7 +242,7 @@ workflow EFFLUENT {
   
   }else if (params.freebayes){
   
-    aln_depth_ch = trim_aln_ch
+    aln_depth_ch = post_aln_ch
   
     aln_depth_ch
     .combine(ref_ch)|read_depths
@@ -261,7 +261,7 @@ workflow EFFLUENT {
       
   }else {
     
-    trim_aln_ch
+    post_aln_ch
     .combine(ref_ch)| var_call_freyja
     
     depth_ch=var_call_freyja
