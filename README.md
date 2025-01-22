@@ -80,7 +80,19 @@ Ensure the absolute path of the directory containing data to be analyzed is used
 To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#-
 - Primer scheme bed file [./data_dir/primer[vers].bed]
 
+| Input       | Option | Description | Notes                                                                                                
+|:--------------|------------:|:-----------------------------------------------------------------------------------------------------------|
+| Reference genome | --ref       | Reference genome of pathogen of interest for guided read alignment | ./resources/cov2_ref.fasta                                                                      |
+| Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error.
+To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
+| Bed file | --primers | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                                                          |
+| Results directory | --out_dir          | Path of directory to output results into |                                       |          
+
+
 ## Output
+
+
+## Parameters
 
 ## Workflow
 
@@ -360,3 +372,4 @@ flowchart TB
 ```
 ## References
 
+1. Karthikeyan, S., Levy, J. I., De Hoff, P., Humphrey, G., Birmingham, A., Jepsen, K., Farmer, S., Tubb, H. M., Valles, T., Tribelhorn, C. E., Tsai, R., Aigner, S., Sathe, S., Moshiri, N., Henson, B., Mark, A. M., Hakim, A., Baer, N. A., Barber, T., Belda-Ferre, P., … Knight, R. (2022). Wastewater sequencing uncovers early, cryptic SARS-CoV-2 variant transmission. medRxiv : the preprint server for health sciences, 2021.12.21.21268143. https://doi.org/10.1101/2021.12.21.21268143
