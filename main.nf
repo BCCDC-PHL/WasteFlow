@@ -35,6 +35,7 @@ Optional arguments:
  --primers                Bed file containing primer scheme for trimming with iVar
  --primerless_reads       iVar trim include reads that are outside of primer regions/ no primers (ie. Nextera) [off]
  --primer_pairs           iVar trim specify primer pairs .tsv file when amplicons are fragmented (ie. Nextera) [none]
+ --skip_trim              Skip primer trimming (ie. probe-enrichment) [off]
  --ivar_flags             Additional options to pass to iVar during primer/ quality trimming
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
