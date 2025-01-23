@@ -3,5 +3,9 @@ channels:
   - conda-forge
 dependencies:
   - python=3.9.13
-  - freyja=1.4.9
+  - freyja=1.5.1
+  - pip
+  - pip:
+    - numpy==1.26.4
+    - pyarrow==11.0.0
   
