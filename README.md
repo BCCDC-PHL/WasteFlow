@@ -21,14 +21,14 @@ is sequenced. This pipeline, WasteFlow, written in Nextflow aims to provide a st
 ## Quick Start
 
 ```
-nextflow run main.nf -profile conda --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed --conda_cache /home/user/caches/  
+nextflow run BCCDC-PHL/WasteFlow -profile conda --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed
 ```
 
 ## Dependencies
 
 [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) is required to build an environment with required workflow dependencies.
 
-This bioinformatic pipeline requires Nextflow:
+This bioinformatic pipeline requires Nextflow :
 ```
 conda install -c bioconda nextflow
 ```
@@ -41,10 +41,10 @@ Nextflow requires Java v8.0+, so check that it is installed:
 ```
 java -version
 ```
-The OS-independent conda environment activated upon running WasteFlow is specified in the
-```wasteflow_env.yml``` file of the project directory and is built when 
+The OS-independent conda environments activated upon running WasteFlow are specified in the
+```envs``` folder of the project directory and is built when 
 ```-profile conda``` is included in the command line. Nextflow will save
-the environment to the project directory by default. Alternatively, the 
+the environment to the ./work/conda directory by default. Alternatively, the 
 necessary conda environment can be saved to a different shared location 
 accesible to compute nodes by adding ```--conda_cache /path/to/new/location/```.
 
@@ -55,6 +55,11 @@ To copy the program into a directory of your choice, from desired directory run:
 git clone https://github.com/j3551ca/WasteFlow.git
 cd WasteFlow
 nextflow run main.nf -profile conda --data_dir /path/to/input/data
+```
+
+alternatively:
+```
+nextflow run BCCDC-PHL/WasteFlow -profile conda --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed
 ```
 
 ## Quick-Start Guide
@@ -81,7 +86,7 @@ To merge replicates of the same sample (--combine_reps) the replicate number mus
 - Primer scheme bed file [./data_dir/primer[vers].bed]
 
 | Input       | Option | Description | Notes   |                                                                                             
-|:--------------|:------------|:-----------------------------------------------------------------------------------------------------------|:-----------|
+|:--------------|:----------------|:--------------------------------------------------------------------------------------------------|:-----------|
 | Reference genome | --ref       | Reference genome of pathogen of interest for guided read alignment | ./resources/cov2_ref.fasta                                                                      |
 | Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
 | Bed file | --primers | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
