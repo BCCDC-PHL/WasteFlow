@@ -5,12 +5,12 @@
 The excretion of pathogens by humans during active infection allows the contemporaneous monitoring of outbreaks in wastewater.
 Wastewater includes liquids drained from toilets, showers, and dishwashers. Sewage is treated across 5 wastewater treatment plants in
 Metro Vancouver before becoming effluent. Samples are collected prior to treatment from the non-solid fraction, RNA is extracted, and genomic material
-is sequenced. This pipeline, WasteFlow, written by JMC in Nextflow aims to provide a standardized approach to further resolve presence or absence of SARS-CoV-2 in wastewater, into lineages infecting the population to inform precautionary measures and therapeutic strategies.
+is sequenced. This pipeline, WasteFlow, written in Nextflow aims to provide a standardized approach to further resolve presence or absence of SARS-CoV-2 in wastewater, into lineages infecting the population to inform precautionary measures and therapeutic strategies.
 
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Quick-Start Guide](#quick-start%guide)
+- [Quick-Start Guide](#quick-start-guide)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Input](#input)
