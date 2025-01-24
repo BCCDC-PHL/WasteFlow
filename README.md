@@ -28,7 +28,7 @@ nextflow run BCCDC-PHL/WasteFlow -profile conda --data_dir /path/to/pe/fastq/fil
 
 [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) is required to build an environment with required workflow dependencies.
 
-This bioinformatic pipeline requires Nextflow :
+This bioinformatic pipeline requires [Nextflow](https://www.nextflow.io/):
 ```
 conda install -c bioconda nextflow
 ```
