@@ -1,5 +1,6 @@
 name: freyja_env
 channels:
+  - bioconda
   - conda-forge
 dependencies:
   - python=3.9.13
