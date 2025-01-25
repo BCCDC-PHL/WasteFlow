@@ -100,7 +100,7 @@ The pipeline requires the following files:
 ## Parameters
 
 | Parameter | Description | Required | Default |
-| :--------------- | :--------------- | :--------------- | :--------------- |
+| :--------------- | :--------------- | :--------------- | :---------------|
 | dir    | User's directory that contains input paired-end sequence reads (fastq files).
 WasteFlow accepts gzip compressed or uncompressed files (*.fastq.gz, *.fq.gz, *.fastq, *.fq). Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. | yes | none |
 | ref    | Reference genome used to align reads to during guided assembly | yes | resources/cov2.fa |
