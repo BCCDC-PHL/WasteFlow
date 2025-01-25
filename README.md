@@ -19,7 +19,7 @@ is sequenced. This pipeline, WasteFlow, written in Nextflow aims to provide a st
 - [Workflow](#workflow)
 - [References](#references)
 
-## Quick Start
+## Quick-Start
 
 ```
 nextflow run BCCDC-PHL/WasteFlow -profile conda --data_dir /path/to/pe/fastq/files/ --ref ./resources/cov2_ref.fasta --primers ./resources/articV5.3.bed
