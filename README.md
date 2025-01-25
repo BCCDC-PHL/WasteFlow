@@ -89,7 +89,7 @@ To merge replicates of the same sample (--combine_reps) the replicate number mus
 |:--------------|:----------------|:--------------------------------------------------------------------------------------------------|:-----------|
 | Reference genome | --ref       | Reference genome of pathogen of interest for guided read alignment | ./resources/cov2_ref.fasta                                                                      |
 | Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
-| Bed file | --primers | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
+| Bed file | --primers     | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
 | Results directory | --out_dir          | Path of directory to output results into |                                       |          
 
 
