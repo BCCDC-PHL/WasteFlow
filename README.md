@@ -15,6 +15,7 @@ is sequenced. This pipeline, WasteFlow, written in Nextflow aims to provide a st
 - [Installation](#installation)
 - [Input](#input)
 - [Output](#output)
+- [Parameters](#parameters)
 - [Workflow](#workflow)
 - [References](#references)
 
@@ -79,35 +80,58 @@ nextflow run main.nf -profile conda --data_dir /path/to/input/data --rerun_mut "
 
 The pipeline requires the following files:
 
-- Reference genome for guided read alignment [./data_dir/sequences.fasta]
-- Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq]. 
-Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error.
-To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#-
-- Primer scheme bed file [./data_dir/primer[vers].bed]
-
 | Input       | Option | Description | Notes   |                                                                                             
-|:--------------|:------------------------|:--------------------------------------------------------------------------------------------------|:-----------|
+|:--------------|:------------------------|:------------------------------------|:-----------|
 | Reference genome | --ref       | Reference genome of pathogen of interest for guided read alignment | ./resources/cov2_ref.fasta                                                                      |
 | Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
-| Bed file |      --primers     | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
-| Results directory |     --out_dir          | Path of directory to output results into |                                       |          
-
+| Bed file | --primers     | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
+| Results directory | --out_dir          | Path of directory to output results into |                                       |          
 
 ## Output
 
+| Output | Description |  
+| :--------------- | :--------------- |
+| freyja_lineage_summary.tsv    | File containing Freyja output of relative abundances of pathogen variants in each sample | 
+| *vcf.tsv    | Variant Call Format file per sample produced during `freyja variants` command (iVar) | 
+| *_depths.txt    | Depth per position files per sample produced during `freyja variants` command (samtools)  |
+| multiqc_report.html    | QC of reads and alignments for each sample.  |
+| _WasteFlow.log    | Log of runtime information like Freyja barcode used, analysis start-time, directories, command executed.  |
 
 ## Parameters
+
+| Parameter | Description | Required | Default |
+| :--------------- | :--------------- | :--------------- | :--------------- |
+| dir    | User's directory that contains input paired-end sequence reads (fastq files).
+WasteFlow accepts gzip compressed or uncompressed files (*.fastq.gz, *.fq.gz, *.fastq, *.fq). Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. | yes | none |
+| ref    | Reference genome used to align reads to during guided assembly | yes | resources/cov2.fa |
+| out_dir    | User-specified directory to output WasteFlow results to. | no | data_dir/results |
+| combine_reps    |Include this option to combine multiple sequencing replicates into one file containing all forward reads and one file containing all reverse reads. To merge replicates of the same sample, the replicate number must be present in the filename as -#- (ex. prefix-2-suf_fix.fq). | no | off |
+| trim_galore    | Include this switch to use trim-galore to trim adapters/ low qual bases | no | fastp |
+| bwa    | Include this switch to use bwa-mem to align reads to reference | no | minimap2 |
+| conda_cache    | User-defined location to save conda env | no | ./work/conda |
+| adapters    | Additional adapters to include during trimming with fastp  | no | ${projectDir}/resources/cov2_adapter.fasta |
+| primers    | Bed file containing primer scheme for trimming with iVar | yes | ${projectDir}/resources/articV5.3.bed |
+| primerless_reads    | iVar trim include reads that are outside of primer regions/ no primers (ie. Nextera) | no | off |
+| primer_pairs    | iVar trim specify path to primer pairs *.tsv file when amplicons are fragmented (ie. Nextera) | no | none |
+| skip_trim    | Skip primer trimming (ie. probe-enrichment)  | no | off |
+| ivar_flags    | Additional options to pass to iVar during primer/ quality trimming | no | -m 30 -q 20 -s 4 |
+| freebayes    | Include this switch to use freebayes to call variants | no | Freyja::iVar |
+| freeb_flags    | Additional options to pass freebayes during variant calling | no | -p 1  --pooled-continuous --min-coverage 5 |
+| demixdepth    | The minimum read depth for a site to be considered in Freyja demix. Collapses indistinguishable lineages.  | no | 10 |
+| boot    | Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (\*_summarized.csv) | no | off |
+| bootnum    | Number of bootstrap replicates to perform for lineage abundance estimations | no | 100 |
+| rerun_lins    | Search string providing path to previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}").
+Reruns Freyja demix command which is the lineage classificaion step. Useful for re-analyzing past samples after Freyja barcode has been updated. | no | off |
+| rerun_mut    | User-defined pathway/search string used to collect past mutation tables. Must be quoted.  | no | none |
+| mut_dir    | User-defined path to save cumulative mutation table | no | none |
+| annotate_snps    | This will produce a CSV table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. NOTE: this behaviour (ie. vcf2table process) is automatically active if you are using --rerun_mut. | no | off |
+| dt_threads | Set number of threads used by data.table. This is relevant to the mutation-monitoring processes in R and prevents a segfault error [#1](https://github.com/BCCDC-PHL/WasteFlow/issues/1)  | no | 60 |
+| version    | Current WasteFlow version number | no | none |
+| help    | Help on usage of WasteFlow | no | none |
 
 ## Workflow
 
 WasteFlow was designed to allow multiple workflows for various pathogens. For example, reads can be processed with trim-galore or fastp, alignments can be generated with bwa or minimap2, variants can be called with iVar or Freebayes, and lineage calls made by Freyja can be performed on one directory or multiple. The modularity of Nextflow facilitates the addition of alternate packages. WasteFlow has currently been tested on SARS-CoV-2. Common workflows are outlined below: 
-
---combine_reps This allows multiple sequencing replicates to be combined into one file containing all forward reads and one file containing all reverse reads. To merge replicates of the same sample the replicate number must be present in the filename as -#- (ex. prefix-2-suf_fix.fq).
-
---annotate_snps This will produce a CSV table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. NOTE: this behaviour (ie. vcf2table process) is automatically active if you are using --rerun_mut.
-
---primerless_reads 
---primer_pairs 
 
 **The default workflow:**
 
