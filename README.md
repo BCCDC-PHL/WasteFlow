@@ -65,14 +65,18 @@ nextflow run BCCDC-PHL/WasteFlow -profile conda --data_dir /path/to/pe/fastq/fil
 
 ## Quick-Start Guide
 
+Run all modules from the WasteFlow directory after cloning repository:
 ```
-# Run all modules from the WasteFlow directory after cloning repository:
 nextflow run main.nf -profile conda --data_dir /path/to/input/data
+```
 
-# Run all modules outside of WasteFlow
+Run all modules outside of WasteFlow
+```
 nextflow run j3551ca/WasteFLow -profile conda --data_dir /path/to/input/data
+```
 
-# Run all modules + collate all *mutation_tables.csv, construct mutation measurements, and write cumulative file
+Run all modules + collate all *mutation_tables.csv, construct mutation measurements, and write cumulative file
+```
 nextflow run main.nf -profile conda --data_dir /path/to/input/data --rerun_mut "/path/to/dir/holding/*mutation_table.csv" --mut_dir /path/to/write/cumlative_file  
 ```
 
@@ -84,8 +88,8 @@ The pipeline requires the following files:
 |:--------------|:------------------------|:------------------------------------|:-----------|
 | Reference genome | --ref       | Reference genome of pathogen of interest for guided read alignment | ./resources/cov2_ref.fasta                                                                      |
 | Paired-end sequencing reads| --dir        | Paired-end sequencing reads. WasteFlow will accept *.fastq.gz, *.fq.gz, *.fastq, *.fq [./data_dir/*.fq].  | Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. To merge replicates of the same sample (--combine_reps) the replicate number must be present in the filename as -#- | 
-| Bed file | --primers     | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed                              |
-| Results directory | --out_dir          | Path of directory to output results into |                                       |          
+| Bed file | --primers     | Primer scheme bed file  |  ${projectDir}/resources/articV5.3.bed    |
+| Results directory | --out_dir    | Path of directory to output results into |   |          
 
 ## Output
 
@@ -101,8 +105,7 @@ The pipeline requires the following files:
 
 | Parameter | Description | Required | Default |
 | :--------------- | :--------------- | :--------------- | :---------------|
-| dir    | User's directory that contains input paired-end sequence reads (fastq files).
-WasteFlow accepts gzip compressed or uncompressed files (*.fastq.gz, *.fq.gz, *.fastq, *.fq). Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. | yes | none |
+| dir    | User's directory that contains input paired-end sequence reads (fastq files). WasteFlow accepts gzip compressed or uncompressed files (*.fastq.gz, *.fq.gz, *.fastq, *.fq). Ensure the absolute path of the directory containing data to be analyzed is used, otherwise MultiQC will throw an error. | yes | none |
 | ref    | Reference genome used to align reads to during guided assembly | yes | resources/cov2.fa |
 | out_dir    | User-specified directory to output WasteFlow results to. | no | data_dir/results |
 | combine_reps    |Include this option to combine multiple sequencing replicates into one file containing all forward reads and one file containing all reverse reads. To merge replicates of the same sample, the replicate number must be present in the filename as -#- (ex. prefix-2-suf_fix.fq). | no | off |
@@ -120,8 +123,7 @@ WasteFlow accepts gzip compressed or uncompressed files (*.fastq.gz, *.fq.gz, *.
 | demixdepth    | The minimum read depth for a site to be considered in Freyja demix. Collapses indistinguishable lineages.  | no | 10 |
 | boot    | Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (\*_summarized.csv) | no | off |
 | bootnum    | Number of bootstrap replicates to perform for lineage abundance estimations | no | 100 |
-| rerun_lins    | Search string providing path to previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}").
-Reruns Freyja demix command which is the lineage classificaion step. Useful for re-analyzing past samples after Freyja barcode has been updated. | no | off |
+| rerun_lins    | Search string providing path to previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}"). Reruns Freyja demix command which is the lineage classificaion step. Useful for re-analyzing past samples after Freyja barcode has been updated. | no | off |
 | rerun_mut    | User-defined pathway/search string used to collect past mutation tables. Must be quoted.  | no | none |
 | mut_dir    | User-defined path to save cumulative mutation table | no | none |
 | annotate_snps    | This will produce a CSV table of annotated mutations for each sample. Currently variants are called by Freebayes and annotated with SnpEff. NOTE: this behaviour (ie. vcf2table process) is automatically active if you are using --rerun_mut. | no | off |
@@ -401,24 +403,14 @@ flowchart TB
 ## References
 
 1. Karthikeyan, S., Levy, J.I., De Hoff, P. et al. Wastewater sequencing reveals early cryptic SARS-CoV-2 variant transmission. Nature 609, 101–108 (2022). https://doi.org/10.1038/s41586-022-05049-6
-
 2. Heng Li, Minimap2: pairwise alignment for nucleotide sequences, Bioinformatics, Volume 34, Issue 18, September 2018, Pages 3094–3100, https://doi.org/10.1093/bioinformatics/bty191
-
 3. Grubaugh, N.D., Gangavarapu, K., Quick, J. et al. An amplicon-based sequencing framework for accurately measuring intrahost virus diversity using PrimalSeq and iVar. Genome Biol 20, 8 (2019). https://doi.org/10.1186/s13059-018-1618-7
-
 4. Shifu Chen, Yanqing Zhou, Yaru Chen, Jia Gu, fastp: an ultra-fast all-in-one FASTQ preprocessor, Bioinformatics, Volume 34, Issue 17, September 2018, Pages i884–i890, https://doi.org/10.1093/bioinformatics/bty560
-
 5. Heng Li, Bob Handsaker, Alec Wysoker, Tim Fennell, Jue Ruan, Nils Homer, Gabor Marth, Goncalo Abecasis, Richard Durbin, 1000 Genome Project Data Processing Subgroup, The Sequence Alignment/Map format and SAMtools, Bioinformatics, Volume 25, Issue 16, August 2009, Pages 2078–2079, https://doi.org/10.1093/bioinformatics/btp352
-
 6. Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
-
 7. A program for annotating and predicting the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118; iso-2; iso-3.", Cingolani P, Platts A, Wang le L, Coon M, Nguyen T, Wang L, Land SJ, Lu X, Ruden DM. Fly (Austin). 2012 Apr-Jun;6(2):80-92. PMID: 22728672
-
 8. Using Drosophila melanogaster as a model for genotoxic chemical mutational studies with a new program, SnpSift", Cingolani, P., et. al., Frontiers in Genetics, 3, 2012.
-
 9. Philip Ewels, Måns Magnusson, Sverker Lundin, Max Käller, MultiQC: summarize analysis results for multiple tools and samples in a single report, Bioinformatics, Volume 32, Issue 19, October 2016, Pages 3047–3048, https://doi.org/10.1093/bioinformatics/btw354
-
 10. Andrews, S. (2010). FASTQC. A quality control tool for high throughput sequence data
-
 11. Martin, M. (2011). Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.journal, 17(1), pp. 10-12. doi:https://doi.org/10.14806/ej.17.1.200
 
