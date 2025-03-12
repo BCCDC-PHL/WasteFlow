@@ -121,7 +121,7 @@ The pipeline requires the following files:
 | freebayes    | Include this switch to use freebayes to call variants | no | Freyja::iVar |
 | freeb_flags    | Additional options to pass freebayes during variant calling | no | -p 1  --pooled-continuous --min-coverage 5 |
 | demixdepth    | The minimum read depth for a site to be considered in Freyja demix. Collapses indistinguishable lineages.  | no | 10 |
-| barcode    | Path to *{.csv,.feather} file containing custom barcodes | no | `freyja demix` barcodes |
+| barcode    | Path to *{.csv,.feather} file containing custom barcodes | no | `freyja demix` usher_barcodes |
 | boot    | Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (\*_summarized.csv) | no | off |
 | bootnum    | Number of bootstrap replicates to perform for lineage abundance estimations | no | 100 |
 | rerun_lins    | Search string providing path to previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}"). Reruns Freyja demix command which is the lineage classificaion step. Useful for re-analyzing past samples after Freyja barcode has been updated. | no | off |
