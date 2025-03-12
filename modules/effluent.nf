@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 process read_depths {
   
   tag "Extracting read depth coverage in ${sample_id} with SAMtools"
-  publishDir "${params.out_dir}/samtools_depths", mode: 'copy'
+  publishDir "${params.out_dir}/samtools_depths", mode: "copy"
 
   input:
   tuple val(sample_id), file(trim_sort_bam), path(trim_sort_bai), file(ref)
@@ -35,7 +35,7 @@ process read_depths {
 process var_call_freyja {
   
   tag "Calling variants and extracting read depth from ${sample_id} with Freyja (iVar)"
-  publishDir "${params.out_dir}/freyja_variant_calls_depths", mode: 'copy'
+  publishDir "${params.out_dir}/freyja_variant_calls_depths", mode: "copy"
 
   input:
   tuple val(sample_id), path(trim_sort_bam),path(trim_sort_bai), path(ref)
@@ -62,9 +62,9 @@ process var_call_freyja {
 process lineage_freyja {
     
   tag "Calculating relative viral lineage abundances from ${sample_id} with Freyja"
-  publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: 'copy'
-  //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }
-  errorStrategy 'ignore'
+  publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: "copy"
+  //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? "ignore" : "terminate" }
+  errorStrategy "ignore"
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
@@ -86,9 +86,9 @@ process lineage_freyja {
 process bootstrap_freyja {
 
   tag "Bootstrapping lineage prevalences from ${sample_id} with Freyja"
-  publishDir "${params.out_dir}/freyja_individual_bootstrapped_lineages", mode: 'copy'
-  //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? 'ignore' : 'terminate' }  
-  errorStrategy 'ignore'
+  publishDir "${params.out_dir}/freyja_individual_bootstrapped_lineages", mode: "copy"
+  //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? "ignore" : "terminate" }  
+  errorStrategy "ignore"
 
   input:
   tuple val(sample_id), path(depths), path(vcf)
@@ -112,7 +112,7 @@ process bootstrap_freyja {
 process barcode_version {
 
   tag "Logging WasteFlow pipeline metadata"
-  publishDir "${params.out_dir}/pipeline_reports", mode: 'copy'
+  publishDir "${params.out_dir}/pipeline_reports", mode: "copy"
 
   output:
   file("*.log")
@@ -138,7 +138,7 @@ process barcode_version {
 process summarize_freyja {
   
   tag "Summarizing relative viral lineage abundances across all samples with Freyja"
-  publishDir "${params.out_dir}/freyja_overall_lineage_summary", mode: 'copy'
+  publishDir "${params.out_dir}/freyja_overall_lineage_summary", mode: "copy"
 
   input:
   file("*")
@@ -161,7 +161,7 @@ process summarize_freyja {
 
 process vcf2table {
   tag "Extract and clean mutations from ${sample_id} annotated VCF file"
-  publishDir "${params.out_dir}/mutation_table", mode: 'copy'
+  publishDir "${params.out_dir}/mutation_table", mode: "copy"
 
   input:
     tuple val(sample_id), path(ann_vcf)
@@ -213,7 +213,7 @@ workflow EFFLUENT {
   past_depth_vcf_ch = Channel
   .fromPath( params.rerun_lins,
    checkIfExists: true )
-  .map{ tuple( it.baseName.split('_freyja')[0], it ) }
+  .map{ tuple( it.baseName.split("_freyja")[0], it ) }
   .groupTuple(sort: true)
   .map{tuple(it[0], it[1][0], it[1][1])}
   .filter { it[2].size()>0 }
