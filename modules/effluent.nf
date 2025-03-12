@@ -124,7 +124,7 @@ process barcode_version {
   publishDir "${params.out_dir}/pipeline_reports", mode: "copy"
 
   output:
-  file("*.log")
+  file("*.json")
   
   """
   current_time=\$(date +%Y%m%d-%H%M%S)
