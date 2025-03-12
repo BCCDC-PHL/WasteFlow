@@ -72,8 +72,17 @@ process lineage_freyja {
   output:
   tuple val(sample_id), file("*.tsv"), file("*.yml") 
 
+  script:
+
+  if (params.barcode=="no_file"){
+    custom_barcode = ""
+  } else {
+    custom_barcode = "--barcodes ${params.barcode}"
+  }
+
   """
   freyja demix\
+  ${custom_barcode} \
   --depthcutoff ${params.demixdepth} \
   --output ${sample_id}_freyja_lineage_summary.tsv \
   ${vcf} \
