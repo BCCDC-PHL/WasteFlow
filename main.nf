@@ -39,15 +39,16 @@ Optional arguments:
  --ivar_flags             Additional options to pass to iVar during primer/ quality trimming
  --freebayes              Include this switch to use freebayes to call variants [Freyja::iVar]
  --freeb_flags            Additional options to pass freebayes during variant calling
- --demixdepth             The minimum read depth for a site to be considered in Freyja demix. Collapses indistinguishable lineages. [10]
+ --demixdepth             The minimum read depth for a site to be considered in Freyja demix. Collapses indistinguishable lineages [10]
+ --barcode                Path to *{.csv,.feather} file containing custom barcodes [freyja/data/usher_barcodes{.csv,.feather}]
  --boot                   Activate Freyja bootstrap estimates of each lineage (*_lineages.csv) & WHO VOI/VOC (*_summarized.csv) [off]
  --bootnum                Number of bootstrap replicates to perform for lineage abundance estimations [100]  
  --rerun_lins             Search string providing previously generated vcf and depth files (ex. "/path/to/*{.txt,.tsv}")
                           Reruns Freyja demix command which is the lineage classificaion step. 
-                          Useful after Freyja barcode has been updated. [off]
+                          Useful after Freyja barcode has been updated [off]
  --annotate_snps          Generate annotated, clean, formatted output of mutations per sample in data dir [off]
  --mut_dir                User-defined location to save cumulative mutation table [none]
- --rerun_mut              User-defined pathway/search string used to collect past mutation tables. Must be quoted. [none]  
+ --rerun_mut              User-defined pathway/search string used to collect past mutation tables. Must be quoted [none]  
  --version                Current WasteFlow version number
  --help                   This usage statement
         """
