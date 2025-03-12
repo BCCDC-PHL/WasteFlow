@@ -128,17 +128,19 @@ process barcode_version {
   
   """
   current_time=\$(date +%Y%m%d-%H%M%S)
-  echo \$(freyja demix --version) > \${current_time}_WasteFlow.log
-  echo -e "Pipeline name: ${workflow.manifest.name}  
-  Pipeline version: ${workflow.manifest.version}  
-  Nextflow version: ${nextflow.version}  
-  Execution start time: ${workflow.start}
-  Executed command: ${workflow.commandLine} 
-  Data directory: ${params.data_dir}
-  Results directory: ${params.out_dir}
-  Project directory: ${workflow.projectDir}
-  Launch directory: ${workflow.launchDir} 
-  Session ID: ${workflow.sessionId} " >> \${current_time}_WasteFlow.log
+  barcode_used=\$([ "${params.barcode}" = "no_file" ] && echo -e "\$(freyja demix --version | grep -o "[0-9][0-9_|-]*")" || echo -e "${params.barcode}")
+  
+  echo -e '{\n"barcode_version": "'\${barcode_used}'",' > \${current_time}_WasteFlow_log.json
+  echo -e '"pipeline_name": "${workflow.manifest.name}",
+"pipeline_version": "${workflow.manifest.version}",  
+"nextflow_version": "${nextflow.version}",  
+"execution_start_time": "${workflow.start}",
+"executed_command": "${workflow.commandLine}", 
+"data_directory": "${params.data_dir}",
+"results_directory": "${params.out_dir}",
+"project_directory": "${workflow.projectDir}",
+"launch_directory": "${workflow.launchDir}", 
+"session_id": "${workflow.sessionId}"\n}' >> \${current_time}_WasteFlow_log.json
   
   """
 
