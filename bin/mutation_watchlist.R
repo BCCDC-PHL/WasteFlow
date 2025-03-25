@@ -33,7 +33,7 @@ if ( is.null(opt$concat_mutations) | is.null(opt$outdir) ){
 }
 
 message("Running script with the following options:")
-message(sprintf("--concat_mutations : %s\n--outdir : %s\n--DT_threads : %s"",
+message(sprintf("--concat_mutations : %s\n--outdir : %s\n--DT_threads : %s",
                 opt$concat_mutations, opt$outdir, opt$DT_threads))
 
 
