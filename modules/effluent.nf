@@ -3,7 +3,9 @@
 nextflow.enable.dsl=2
 
 process read_depths {
-  
+  executor "slurm"
+  cpus 1
+
   tag "Extracting read depth coverage in ${sample_id} with SAMtools"
   publishDir "${params.out_dir}/samtools_depths", mode: "copy"
 
@@ -60,7 +62,9 @@ process var_call_freyja {
 }
 
 process lineage_freyja {
-    
+  executor "slurm"
+  cpus 1
+
   tag "Calculating relative viral lineage abundances from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_lineage_summaries", mode: "copy"
   //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? "ignore" : "terminate" }
@@ -93,7 +97,8 @@ process lineage_freyja {
 }
 
 process bootstrap_freyja {
-
+  executor "slurm"
+  cpus 1
   tag "Bootstrapping lineage prevalences from ${sample_id} with Freyja"
   publishDir "${params.out_dir}/freyja_individual_bootstrapped_lineages", mode: "copy"
   //errorStrategy { sample_id.toLowerCase() =~ /neg/ ? "ignore" : "terminate" }  
@@ -119,7 +124,9 @@ process bootstrap_freyja {
 }
 
 process barcode_version {
-
+  executor "slurm"
+  cpus 1
+  
   tag "Logging WasteFlow pipeline metadata"
   publishDir "${params.out_dir}/pipeline_reports", mode: "copy"
 
