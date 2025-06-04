@@ -44,6 +44,8 @@ process var_call_freyja {
   tuple val(sample_id), file("*.txt"), file("*.tsv")
 
   """
+  samtools faidx ${ref}
+  
   freyja variants \
   ${trim_sort_bam} \
   --variants ${sample_id}_freyja_vcf \
