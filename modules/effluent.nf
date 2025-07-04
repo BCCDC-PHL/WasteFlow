@@ -82,9 +82,16 @@ process lineage_freyja {
     custom_barcode = "--barcodes ${params.barcode}"
   }
 
+  if (params.demix_params=="no_file"){
+    additional_params = ""
+  } else {
+    additional_params = "${params.demix_params}"
+  }
+
   """
   freyja demix\
   ${custom_barcode} \
+  ${additional_params} \
   --depthcutoff ${params.demixdepth} \
   --output ${sample_id}_freyja_lineage_summary.tsv \
   ${vcf} \
